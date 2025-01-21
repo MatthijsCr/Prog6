@@ -9,10 +9,10 @@ namespace BeestjeOpEenFeestje.Models
 
         [Required(ErrorMessage = ErrorMessages.RequiredField)]
         [Phone(ErrorMessage = ErrorMessages.InvalidPhoneNumber)]
-        public override string PhoneNumber { get; set; }
+        public override string? PhoneNumber { get; set; }
 
         [Required(ErrorMessage = ErrorMessages.RequiredField)]
         [StringLength(150, ErrorMessage = ErrorMessages.MaxLengthAddress)]
-        public string Address { get; set; }
+        public string? Address { get; set; }
     }
 }
