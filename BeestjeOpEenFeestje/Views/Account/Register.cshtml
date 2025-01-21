@@ -18,10 +18,12 @@
     <div>
         <label asp-for="CustomerCard">Klantenkaart</label>
         <select asp-for="CustomerCard" class="form-control">
-            <option value="0">No Card</option>
-            <option value="1">Silver</option>
-            <option value="2">Gold</option>
-            <option value="3">Platinum</option>
+            @foreach (var cardType in Enum.GetValues(typeof(BeestjeOpEenFeestje.Models.CustomerCardType)))
+            {
+                <option value="@cardType">
+                    @cardType.ToString()
+                </option>
+            }
         </select>
         <span asp-validation-for="CustomerCard" class="text-danger"></span>
     </div>

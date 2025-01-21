@@ -5,9 +5,9 @@ namespace BeestjeOpEenFeestje.Models
 {
     public enum CustomerCardType
     {
-        None,
-        Silver, 
-        Gold,
+        Geen,
+        Zilver, 
+        Goud,
         Platinum
     }
 }

@@ -62,9 +62,11 @@ namespace BumboApp.Controllers
                 var user = new AppUser
                 {
                     UserName = model.Username,
+                    CustomerCard = model.CustomerCard.ToString(),
                     Email = model.Email,
                     PhoneNumber = model.PhoneNumber,
                     Address = model.Address
+                    
                 };
                 PasswordHasher<AppUser> passwordHasher = new();
                 user.PasswordHash = passwordHasher.HashPassword(user, model.Password);
