@@ -42,13 +42,13 @@ namespace BumboApp.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult Register()
+        public IActionResult CreateCustomer()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterModel model)
+        public async Task<IActionResult> CreateCustomer(RegisterModel model)
         {
             if (ModelState.IsValid)
             {
@@ -74,7 +74,6 @@ namespace BumboApp.Controllers
 
                 if (result.Succeeded)
                 {
-                    await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Password", new { password = model.Password, email = model.Email });
                 }
             }
