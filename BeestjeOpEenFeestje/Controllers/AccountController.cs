@@ -1,6 +1,7 @@
 ﻿
 using BeestjeOpEenFeestje.Models;
 using BeestjeOpEenFeestje.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -19,11 +20,6 @@ namespace BumboApp.Controllers
             _signInManager = signInManager;
             _userManager = userManager;
             _roleManager = roleManager;
-        }
-
-        public IActionResult Index()
-        {
-            return View();
         }
 
         public IActionResult Login()
@@ -50,6 +46,7 @@ namespace BumboApp.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Admin,Employee")]
         public IActionResult CreateUser()
         {
             ViewBag.Roles = _roleManager.Roles.ToList();
@@ -57,6 +54,7 @@ namespace BumboApp.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Employee")]
         public async Task<IActionResult> CreateUser(CreateUserModel model)
         {
             ViewBag.Roles = _roleManager.Roles.ToList();
@@ -97,6 +95,7 @@ namespace BumboApp.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Admin,Employee")]
         public IActionResult Password(string password, string Email) => View(model: new LoginModel() { Email = Email, Password = password});
 
         public async Task<IActionResult> Logout()
@@ -118,6 +117,61 @@ namespace BumboApp.Controllers
             }
 
             return password;
+        }
+
+        public IActionResult AccountsList()
+        {
+            List<AccountListModel> list = new();
+            foreach(AppUser user in _userManager.Users)
+            {
+                list.Add(new AccountListModel() 
+                { 
+                    Address = user.Address, 
+                    CustomerCard = user.CustomerCard, 
+                    Email = user.Email, 
+                    PhoneNumber = user.PhoneNumber, 
+                    Username = user.UserName 
+                });
+            }
+            return View(list);
+        }
+
+        public async Task<IActionResult> UpdateUser(string email)
+        {
+            if (string.IsNullOrEmpty(email)) return RedirectToAction("AccountsList");
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user != null)
+            {
+                UpdateUserModel model = new() { Address = user.Address, Email = email, PhoneNumber = user.PhoneNumber, Username = user.UserName, CustomerCard = (CustomerCardType?)Enum.Parse(typeof(CustomerCardType), user.CustomerCard) };
+                return View(model);
+            }
+            return RedirectToAction("AccountsList");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateUser(UpdateUserModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var existingUser = await _userManager.FindByNameAsync(model.Username);
+                if (existingUser != null)
+                {
+                    ModelState.AddModelError("Username", "De gebruikersnaam is al in gebruik. Kies een andere gebruikersnaam.");
+                    return View(model);
+                }
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user != null)
+                {
+                    user.Address = model.Address;
+                    user.PhoneNumber = model.PhoneNumber;
+                    user.UserName = model.Username;
+                    user.CustomerCard = model.CustomerCard.ToString();
+                    var result = await _userManager.UpdateAsync(user);
+                    if (result.Succeeded) return RedirectToAction("AccountsList");
+                }
+            }
+            return View(model);
         }
     }
 }

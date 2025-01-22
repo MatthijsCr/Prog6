@@ -1,1 +1,42 @@
-﻿
+﻿@model IEnumerable<BeestjeOpEenFeestje.ViewModels.AccountListModel>
+
+@{
+    ViewData["Title"] = "User List";
+}
+
+<h1>User List</h1>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Naam</th>
+            <th>Adres</th>
+            <th>E-mail</th>
+            <th>Telefoonnummer</th>
+            <th>Klantenkaart</th>
+            <th>actie</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.Username</td>
+                    <td>@user.Address</td>
+                    <td>@user.Email</td>
+                    <td>@user.PhoneNumber</td>
+                    <td>@user.CustomerCard</td>
+                    <td><a href="@Url.Action("UpdateUser", "Account", new { email = user.Email })" class="btn btn-primary">bewerk</a><td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center">Geen personen gevonden</td>
+            </tr>
+        }
+    </tbody>
+</table>
