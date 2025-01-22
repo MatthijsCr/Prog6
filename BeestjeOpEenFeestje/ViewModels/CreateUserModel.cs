@@ -10,10 +10,6 @@ namespace BeestjeOpEenFeestje.ViewModels
         public required string Username { get; set; }
 
         [Required(ErrorMessage = ErrorMessages.RequiredField)]
-        [DataType(DataType.Password)]
-        public required string Password { get; set; }
-
-        [Required(ErrorMessage = ErrorMessages.RequiredField)]
         public required string Address { get; set; }
 
         [Required(ErrorMessage = ErrorMessages.RequiredField)]

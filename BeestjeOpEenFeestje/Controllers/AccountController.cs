@@ -3,6 +3,8 @@ using BeestjeOpEenFeestje.Models;
 using BeestjeOpEenFeestje.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Text;
 
 namespace BumboApp.Controllers
 {
@@ -80,15 +82,16 @@ namespace BumboApp.Controllers
                     PhoneNumber = model.PhoneNumber,
                     Address = model.Address
                 };
+                string GeneratedPassword = GeneratePassword(10);
                 PasswordHasher<AppUser> passwordHasher = new();
-                user.PasswordHash = passwordHasher.HashPassword(user, model.Password);
+                user.PasswordHash = passwordHasher.HashPassword(user, GeneratedPassword);
                 
                 var result = await _userManager.CreateAsync(user);
 
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, model.Role);
-                    return RedirectToAction("Password", new { password = model.Password, email = model.Email });
+                    return RedirectToAction("Password", new { password = GeneratedPassword, email = model.Email });
                 }
             }
             return View(model);
@@ -100,6 +103,21 @@ namespace BumboApp.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login", "Account");
+        }
+
+        public string GeneratePassword(int length)
+        {
+            if(length <= 0) return string.Empty;
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#!";
+            Random random = new Random();
+            string password = string.Empty;
+
+            for (int i = 0; i <= length; i++)
+            {
+                password += chars[random.Next(chars.Length)];
+            }
+
+            return password;
         }
     }
 }

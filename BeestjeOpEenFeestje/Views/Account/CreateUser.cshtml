@@ -10,12 +10,6 @@
     </div>
 
     <div>
-        <label asp-for="Password">Wachtwoord</label>
-        <input asp-for="Password" type="password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-
-    <div>
         <label asp-for="CustomerCard">Klantenkaart</label>
         <select asp-for="CustomerCard" class="form-control">
             @foreach (var cardType in Enum.GetValues(typeof(BeestjeOpEenFeestje.Models.CustomerCardType)))
