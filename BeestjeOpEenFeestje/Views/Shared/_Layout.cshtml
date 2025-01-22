@@ -27,27 +27,24 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        @if (User != null && (User.IsInRole("Employee") || User.IsInRole("Admin")))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Account" asp-action="CreateUser">Nieuwe gebruiker</a>
-                            </li>
-                        }
-                        @if (User == null)
+                        @if (!User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Inloggen</a>
                             </li>
                         }
-                        @if(User != null)
+                        @if(User.Identity.IsAuthenticated)
                         {
+                            @if (User.IsInRole("Employee") || User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="Account" asp-action="CreateUser">Nieuwe gebruiker</a>
+                                </li>
+                            }
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">Uitloggen</a>
                             </li>
                         }
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Account" asp-action="CreateUser">Nieuwe gebruiker</a>
-                        </li>
                     </ul>
                 </div>
             </div>

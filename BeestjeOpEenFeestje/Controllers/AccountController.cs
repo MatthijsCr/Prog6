@@ -38,6 +38,7 @@ namespace BumboApp.Controllers
                 if (user != null)
                 {
                     var result = await _signInManager.PasswordSignInAsync(user, model.Password, isPersistent: true, lockoutOnFailure: false);
+                    await _signInManager.RefreshSignInAsync(user);
                     if (result.Succeeded)
                     {
                         return RedirectToAction("Index","Home");
