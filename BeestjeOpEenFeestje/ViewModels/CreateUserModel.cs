@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BeestjeOpEenFeestje.ViewModels
 {
-    public class RegisterModel
+    public class CreateUserModel
     {
         [Required(ErrorMessage = ErrorMessages.RequiredField)]
         [MaxLength(50)]
@@ -18,14 +18,17 @@ namespace BeestjeOpEenFeestje.ViewModels
 
         [Required(ErrorMessage = ErrorMessages.RequiredField)]
         [EmailAddress]
-        public string? Email { get; set; }
+        public required string Email { get; set; }
 
         [Required(ErrorMessage = ErrorMessages.RequiredField)]
-        [Phone]
-        public string? PhoneNumber { get; set; }
+        [Phone(ErrorMessage = ErrorMessages.InvalidPhoneNumber)]
+        public required string PhoneNumber { get; set; }
 
         [EnumDataType(typeof(CustomerCardType))]
         public CustomerCardType? CustomerCard { get; set; }
+
+        [Required(ErrorMessage = ErrorMessages.RequiredField)]
+        public required string Role { get; set; }
     }
 }
 

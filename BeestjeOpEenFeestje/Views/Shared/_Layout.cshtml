@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -25,9 +27,26 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        @if (User != null && (User.IsInRole("Employee") || User.IsInRole("Admin")))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="CreateUser">Nieuwe gebruiker</a>
+                            </li>
+                        }
+                        @if (User == null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Inloggen</a>
+                            </li>
+                        }
+                        @if(User != null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">Uitloggen</a>
+                            </li>
+                        }
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Nieuwe gebruiker
-                            </a>
+                            <a class="nav-link text-dark" asp-controller="Account" asp-action="CreateUser">Nieuwe gebruiker</a>
                         </li>
                     </ul>
                 </div>
