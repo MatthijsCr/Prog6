@@ -75,7 +75,7 @@ namespace BumboApp.Controllers
                 var user = new AppUser
                 {
                     UserName = model.Username,
-                    CustomerCard = model.CustomerCard.ToString(),
+                    CustomerCard = model.CustomerCard,
                     Email = model.Email,
                     PhoneNumber = model.PhoneNumber,
                     Address = model.Address
@@ -121,10 +121,10 @@ namespace BumboApp.Controllers
 
         public IActionResult AccountsList()
         {
-            List<AccountListModel> list = new();
+            List<UpdateUserModel> list = new();
             foreach(AppUser user in _userManager.Users)
             {
-                list.Add(new AccountListModel() 
+                list.Add(new UpdateUserModel() 
                 { 
                     Address = user.Address, 
                     CustomerCard = user.CustomerCard, 
@@ -143,7 +143,7 @@ namespace BumboApp.Controllers
             var user = await _userManager.FindByEmailAsync(email);
             if (user != null)
             {
-                UpdateUserModel model = new() { Address = user.Address, Email = email, PhoneNumber = user.PhoneNumber, Username = user.UserName, CustomerCard = (CustomerCardType?)Enum.Parse(typeof(CustomerCardType), user.CustomerCard) };
+                UpdateUserModel model = new() { Address = user.Address, Email = email, PhoneNumber = user.PhoneNumber, Username = user.UserName, CustomerCard = user.CustomerCard };
                 return View(model);
             }
             return RedirectToAction("AccountsList");
@@ -155,18 +155,19 @@ namespace BumboApp.Controllers
             if (ModelState.IsValid)
             {
                 var existingUser = await _userManager.FindByNameAsync(model.Username);
-                if (existingUser != null)
-                {
-                    ModelState.AddModelError("Username", "De gebruikersnaam is al in gebruik. Kies een andere gebruikersnaam.");
-                    return View(model);
-                }
                 var user = await _userManager.FindByEmailAsync(model.Email);
+              
                 if (user != null)
                 {
+                    if (existingUser != null && existingUser != user)
+                    {
+                        ModelState.AddModelError("Username", "De gebruikersnaam is al in gebruik. Kies een andere gebruikersnaam.");
+                        return View(model);
+                    }
                     user.Address = model.Address;
                     user.PhoneNumber = model.PhoneNumber;
                     user.UserName = model.Username;
-                    user.CustomerCard = model.CustomerCard.ToString();
+                    user.CustomerCard = model.CustomerCard;
                     var result = await _userManager.UpdateAsync(user);
                     if (result.Succeeded) return RedirectToAction("AccountsList");
                 }

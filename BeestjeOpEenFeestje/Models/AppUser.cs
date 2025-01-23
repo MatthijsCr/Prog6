@@ -5,7 +5,7 @@ namespace BeestjeOpEenFeestje.Models
 {
     public class AppUser : IdentityUser
     {
-        public string? CustomerCard { get; set; }
+        public CustomerCardType CustomerCard { get; set; }
 
         [Required(ErrorMessage = ErrorMessages.RequiredField)]
         [Phone(ErrorMessage = ErrorMessages.InvalidPhoneNumber)]

@@ -21,6 +21,6 @@ namespace BeestjeOpEenFeestje.ViewModels
         public required string PhoneNumber { get; set; }
 
         [EnumDataType(typeof(CustomerCardType))]
-        public CustomerCardType? CustomerCard { get; set; }
+        public CustomerCardType CustomerCard { get; set; }
     }
 }
