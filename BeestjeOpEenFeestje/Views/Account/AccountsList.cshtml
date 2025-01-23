@@ -3,8 +3,10 @@
 @{
     ViewData["Title"] = "Gebruikers";
 }
-
-<h1>Gebruikers</h1>
+<div class="d-flex align-items-center">
+<h1 class="me-5">Gebruikers</h1>
+    <a href="@Url.Action("CreateUser", "Account")" class="btn btn-primary">Nieuwe gebruiker</a>
+</div>
 
 <table class="table table-striped table-bordered">
     <thead>
@@ -14,7 +16,6 @@
             <th>E-mail</th>
             <th>Telefoonnummer</th>
             <th>Klantenkaart</th>
-            <th><a href="@Url.Action("CreateUser", "Account")" class="btn btn-primary">Nieuwe gebruiker</a><th>
         </tr>
     </thead>
     <tbody>
