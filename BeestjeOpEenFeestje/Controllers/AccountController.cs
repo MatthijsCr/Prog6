@@ -49,7 +49,8 @@ namespace BumboApp.Controllers
         [Authorize(Roles = "Admin,Employee")]
         public IActionResult CreateUser()
         {
-            ViewBag.Roles = _roleManager.Roles.ToList();
+            List<string> roles = 
+            ViewBag.Roles = GetRoles();
             return View();
         }
 
@@ -57,7 +58,8 @@ namespace BumboApp.Controllers
         [Authorize(Roles = "Admin,Employee")]
         public async Task<IActionResult> CreateUser(CreateUserModel model)
         {
-            ViewBag.Roles = _roleManager.Roles.ToList();
+            ViewBag.Roles = GetRoles();
+            RolesHelper rolesHelper = new();
             if (ModelState.IsValid)
             {
                 var existingUser = await _userManager.FindByNameAsync(model.Username);
@@ -66,7 +68,7 @@ namespace BumboApp.Controllers
                     ModelState.AddModelError("Username", "De gebruikersnaam is al in gebruik. Kies een andere gebruikersnaam.");
                     return View(model);
                 }
-                var roleExists = await _roleManager.RoleExistsAsync(model.Role.ToString());
+                var roleExists = await _roleManager.RoleExistsAsync(rolesHelper.ConvertRoleToRealName(model.Role));
                 if (!roleExists)
                 {
                     return View(model);
@@ -88,7 +90,7 @@ namespace BumboApp.Controllers
 
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(user, model.Role);
+                    await _userManager.AddToRoleAsync(user, rolesHelper.ConvertRoleToRealName(model.Role));
                     return RedirectToAction("Password", new { password = GeneratedPassword, email = model.Email });
                 }
             }
@@ -173,6 +175,18 @@ namespace BumboApp.Controllers
                 }
             }
             return View(model);
+        }
+
+        public List<string> GetRoles() 
+        {
+            RolesHelper rolesHelper = new();
+            List<IdentityRole> roles = _roleManager.Roles.ToList();
+            List<string> shownRoles = new List<string>();
+            foreach (IdentityRole role in roles)
+            {
+                shownRoles.Add(rolesHelper.ConvertRoleToShownName(role.ToString()));
+            }
+            return shownRoles;
         }
     }
 }
