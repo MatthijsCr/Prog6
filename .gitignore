@@ -5,7 +5,6 @@
 
 # .csproj files
 *.sqlproj.user
-
 # User-specific files
 *.rsuser
 *.suo
