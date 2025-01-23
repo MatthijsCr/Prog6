@@ -1,0 +1,45 @@
+﻿@model BeestjeOpEenFeestje.ViewModels.UpdateUserModel
+
+<h2>Gebruiker aanmaken</h2>
+
+<form asp-action="UpdateUser" method="post">
+    <div>
+        <label asp-for="Username">Naam</label>
+        <input asp-for="Username" class="form-control" />
+        <span asp-validation-for="Username" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label asp-for="CustomerCard">Klantenkaart</label>
+        <select asp-for="CustomerCard" class="form-control">
+            @foreach (var cardType in Enum.GetValues(typeof(BeestjeOpEenFeestje.Models.CustomerCardType)))
+            {
+                <option value="@cardType">
+                    @cardType.ToString()
+                </option>
+            }
+        </select>
+        <span asp-validation-for="CustomerCard" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label asp-for="Address">Adres</label>
+        <input asp-for="Address" class="form-control" />
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>E-mail</label>
+        <input asp-for="Email" class="form-control" disabled="disabled" />
+        <input type="hidden" asp-for="Email" />
+    </div>
+
+    <div>
+        <label asp-for="PhoneNumber">Telefoonnummer</label>
+        <input asp-for="PhoneNumber" class="form-control" />
+        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary">Opslaan</button>
+    </div>
+</form>
