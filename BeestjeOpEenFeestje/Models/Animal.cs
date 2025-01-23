@@ -5,6 +5,8 @@ namespace BeestjeOpEenFeestje.Models
     public class Animal
     {
         [Key]
+        public int Id { get; set; }
+
         [Required(ErrorMessage = ErrorMessages.RequiredField)]
         [MaxLength(50, ErrorMessage = ErrorMessages.MaxLengthName)]
         public string Name { get; set; }
@@ -18,5 +20,8 @@ namespace BeestjeOpEenFeestje.Models
 
         [Required(ErrorMessage = ErrorMessages.RequiredField)]
         public string ImageURL { get; set; }
+
+
+        public List<Reservation> Reservations { get; set; }
     }
 }

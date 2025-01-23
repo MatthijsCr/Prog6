@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace BeestjeOpEenFeestje.Models
 {
@@ -7,10 +8,18 @@ namespace BeestjeOpEenFeestje.Models
     {
         public AnimalDbContext(DbContextOptions<AnimalDbContext> options) : base(options)
         {
-            
         }
 
-        DbSet<Animal> Animals { get; set; }
-        DbSet<Reservation> Reservations { get; set; }
+        public DbSet<Animal> Animals { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<Reservation>()
+                .HasIndex(r => new { r.AnimalId, r.Date })
+                .IsUnique();
+        }
     }
 }
