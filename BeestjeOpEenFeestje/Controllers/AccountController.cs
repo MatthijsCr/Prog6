@@ -49,7 +49,6 @@ namespace BumboApp.Controllers
         [Authorize(Roles = "Admin,Employee")]
         public IActionResult CreateUser()
         {
-            List<string> roles = 
             ViewBag.Roles = GetRoles();
             return View();
         }
@@ -58,7 +57,17 @@ namespace BumboApp.Controllers
         [Authorize(Roles = "Admin,Employee")]
         public async Task<IActionResult> CreateUser(CreateUserModel model)
         {
+            string GeneratedPassword = GeneratePassword(10);
+            if (await MakeUser(model, GeneratedPassword))
+            {
+                return RedirectToAction("Password", new { password = GeneratedPassword, email = model.Email });
+            }
             ViewBag.Roles = GetRoles();
+            return View(model);
+        }
+
+        private async Task<bool> MakeUser(CreateUserModel model, string GeneratedPassword)
+        {
             RolesHelper rolesHelper = new();
             if (ModelState.IsValid)
             {
@@ -66,12 +75,12 @@ namespace BumboApp.Controllers
                 if (existingUser != null)
                 {
                     ModelState.AddModelError("Username", "De gebruikersnaam is al in gebruik. Kies een andere gebruikersnaam.");
-                    return View(model);
+                    return false;
                 }
                 var roleExists = await _roleManager.RoleExistsAsync(rolesHelper.ConvertRoleToRealName(model.Role));
                 if (!roleExists)
                 {
-                    return View(model);
+                    return false;
                 }
 
                 var user = new AppUser
@@ -82,19 +91,18 @@ namespace BumboApp.Controllers
                     PhoneNumber = model.PhoneNumber,
                     Address = model.Address
                 };
-                string GeneratedPassword = GeneratePassword(10);
                 PasswordHasher<AppUser> passwordHasher = new();
                 user.PasswordHash = passwordHasher.HashPassword(user, GeneratedPassword);
-                
+
                 var result = await _userManager.CreateAsync(user);
 
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, rolesHelper.ConvertRoleToRealName(model.Role));
-                    return RedirectToAction("Password", new { password = GeneratedPassword, email = model.Email });
+                    return true;
                 }
             }
-            return View(model);
+            return false;
         }
 
         [Authorize(Roles = "Admin,Employee")]
@@ -154,27 +162,36 @@ namespace BumboApp.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateUser(UpdateUserModel model)
         {
+            if (await ChangeUser(model))
+            {
+                return RedirectToAction("AccountsList");
+            }
+            return View(model);
+        }
+
+        public async Task<bool> ChangeUser(UpdateUserModel model)
+        {
             if (ModelState.IsValid)
             {
                 var existingUser = await _userManager.FindByNameAsync(model.Username);
                 var user = await _userManager.FindByEmailAsync(model.Email);
-              
+
                 if (user != null)
                 {
                     if (existingUser != null && existingUser != user)
                     {
                         ModelState.AddModelError("Username", "De gebruikersnaam is al in gebruik. Kies een andere gebruikersnaam.");
-                        return View(model);
+                        return false;
                     }
                     user.Address = model.Address;
                     user.PhoneNumber = model.PhoneNumber;
                     user.UserName = model.Username;
                     user.CustomerCard = model.CustomerCard;
                     var result = await _userManager.UpdateAsync(user);
-                    if (result.Succeeded) return RedirectToAction("AccountsList");
+                    if (result.Succeeded) return true;
                 }
             }
-            return View(model);
+            return false;
         }
 
         public List<string> GetRoles() 
