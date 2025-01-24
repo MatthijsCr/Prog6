@@ -1,6 +1,7 @@
 ﻿using BeestjeOpEenFeestje.Models;
 using BeestjeOpEenFeestje.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace BeestjeOpEenFeestje.Controllers
 {
@@ -9,7 +10,6 @@ namespace BeestjeOpEenFeestje.Controllers
         private readonly AnimalDbContext _context = context;
 
         [HttpGet]
-        [Route("Reserveren/Datum")]
         public IActionResult Date()
         {
             return View();
@@ -21,13 +21,10 @@ namespace BeestjeOpEenFeestje.Controllers
         {
             ReservationModel viewModel = new ReservationModel
             {
-                Reservation = new() { Date = date },
+                Reservation = new Reservation() { Date = date },
                 Animals = _context.Animals.ToList(),
                 SelectedAnimals = new(),
             };
-
-            _context.Add(viewModel.Reservation);
-            _context.SaveChanges();
 
             return View(viewModel);
         }
@@ -43,7 +40,7 @@ namespace BeestjeOpEenFeestje.Controllers
                 animals.Add(a);
             }
 
-            _context.Update(viewModel.Reservation);
+
             _context.SaveChanges();
 
             return View(viewModel);

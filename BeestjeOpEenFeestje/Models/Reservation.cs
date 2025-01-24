@@ -5,11 +5,12 @@ namespace BeestjeOpEenFeestje.Models
 {
     public class Reservation
     {
-        [Key]
         public int Id { get; set; }
 
+        public Animal Animal { get; set; }
         public int AnimalId { get; set; }
 
+        public AppUser? AppUser { get; set; }
         public string? AppUserId { get; set; }
 
         public string? Name { get; set; }

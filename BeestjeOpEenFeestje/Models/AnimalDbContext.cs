@@ -18,8 +18,21 @@ namespace BeestjeOpEenFeestje.Models
             base.OnModelCreating(builder);
 
             builder.Entity<Reservation>()
+                .HasKey(r => new { r.AnimalId, r.Date });
+
+            builder.Entity<Reservation>()
                 .HasIndex(r => new { r.AnimalId, r.Date })
                 .IsUnique();
+
+            builder.Entity<Reservation>()
+                .HasOne(r => r.AppUser)
+                .WithMany(u => u.Reservations)
+                .HasForeignKey(r => r.AppUserId);
+
+            builder.Entity<Reservation>()
+                .HasOne(r => r.Animal)
+                .WithMany(a => a.Reservations)
+                .HasForeignKey(r => r.AnimalId);
         }
     }
 }

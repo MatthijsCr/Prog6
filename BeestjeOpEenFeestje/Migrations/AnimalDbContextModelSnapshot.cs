@@ -127,26 +127,23 @@ namespace BeestjeOpEenFeestje.Migrations
 
             modelBuilder.Entity("BeestjeOpEenFeestje.Models.Reservation", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("AnimalId")
                         .HasColumnType("int");
-
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
 
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsConfirmed")
                         .HasColumnType("bit");
@@ -154,7 +151,7 @@ namespace BeestjeOpEenFeestje.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("AnimalId", "Date");
 
                     b.HasIndex("AppUserId");
 
@@ -299,15 +296,19 @@ namespace BeestjeOpEenFeestje.Migrations
 
             modelBuilder.Entity("BeestjeOpEenFeestje.Models.Reservation", b =>
                 {
-                    b.HasOne("BeestjeOpEenFeestje.Models.Animal", null)
+                    b.HasOne("BeestjeOpEenFeestje.Models.Animal", "Animal")
                         .WithMany("Reservations")
                         .HasForeignKey("AnimalId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BeestjeOpEenFeestje.Models.AppUser", null)
+                    b.HasOne("BeestjeOpEenFeestje.Models.AppUser", "AppUser")
                         .WithMany("Reservations")
                         .HasForeignKey("AppUserId");
+
+                    b.Navigation("Animal");
+
+                    b.Navigation("AppUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

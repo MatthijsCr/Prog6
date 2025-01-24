@@ -77,7 +77,7 @@ namespace BeestjeOpEenFeestje
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Reservation}/{action=Date}/{id?}");
 
             app.Run();
         }
