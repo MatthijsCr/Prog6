@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BeestjeOpEenFeestje.Migrations
 {
     /// <inheritdoc />
-    public partial class manyToMany : Migration
+    public partial class animalReservations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -178,9 +178,9 @@ namespace BeestjeOpEenFeestje.Migrations
                 name: "Reservations",
                 columns: table => new
                 {
-                    AnimalId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Date = table.Column<DateOnly>(type: "date", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false),
                     AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -189,19 +189,42 @@ namespace BeestjeOpEenFeestje.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reservations", x => new { x.AnimalId, x.Date });
-                    table.ForeignKey(
-                        name: "FK_Reservations_Animals_AnimalId",
-                        column: x => x.AnimalId,
-                        principalTable: "Animals",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_Reservations", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Reservations_AspNetUsers_AppUserId",
                         column: x => x.AppUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 });
+
+            migrationBuilder.CreateTable(
+                name: "AnimalReservation",
+                columns: table => new
+                {
+                    AnimalsId = table.Column<int>(type: "int", nullable: false),
+                    ReservationsId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AnimalReservation", x => new { x.AnimalsId, x.ReservationsId });
+                    table.ForeignKey(
+                        name: "FK_AnimalReservation_Animals_AnimalsId",
+                        column: x => x.AnimalsId,
+                        principalTable: "Animals",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AnimalReservation_Reservations_ReservationsId",
+                        column: x => x.ReservationsId,
+                        principalTable: "Reservations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AnimalReservation_ReservationsId",
+                table: "AnimalReservation",
+                column: "ReservationsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -243,12 +266,6 @@ namespace BeestjeOpEenFeestje.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservations_AnimalId_Date",
-                table: "Reservations",
-                columns: new[] { "AnimalId", "Date" },
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Reservations_AppUserId",
                 table: "Reservations",
                 column: "AppUserId");
@@ -257,6 +274,9 @@ namespace BeestjeOpEenFeestje.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AnimalReservation");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -273,13 +293,13 @@ namespace BeestjeOpEenFeestje.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Animals");
+
+            migrationBuilder.DropTable(
                 name: "Reservations");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "Animals");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

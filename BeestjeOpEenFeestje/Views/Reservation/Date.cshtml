@@ -3,7 +3,7 @@
     <div class="container d-flex justify-content-evenly mt-5">
         <div class="d-flex flex-column col-2 me-5">
             <h4>Kies een datum</h4>
-            <input type="date" name="date" />
+            <input type="date" name="date" min="@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")" required />
             <button type="submit" class="btn btn-primary mt-2">Reserveer</button>
         </div>
         <div class="ms-5">

@@ -22,6 +22,6 @@ namespace BeestjeOpEenFeestje.Models
         public string ImageURL { get; set; }
 
 
-        public List<Reservation> Reservations { get; set; }
+        public List<Reservation> Reservations { get; set; } = new List<Reservation>();
     }
 }

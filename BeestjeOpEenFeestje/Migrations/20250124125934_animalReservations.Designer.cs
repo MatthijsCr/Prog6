@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BeestjeOpEenFeestje.Migrations
 {
     [DbContext(typeof(AnimalDbContext))]
-    [Migration("20250124095522_manyToMany")]
-    partial class manyToMany
+    [Migration("20250124125934_animalReservations")]
+    partial class animalReservations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,21 @@ namespace BeestjeOpEenFeestje.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("AnimalReservation", b =>
+                {
+                    b.Property<int>("AnimalsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReservationsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AnimalsId", "ReservationsId");
+
+                    b.HasIndex("ReservationsId");
+
+                    b.ToTable("AnimalReservation");
+                });
 
             modelBuilder.Entity("BeestjeOpEenFeestje.Models.Animal", b =>
                 {
@@ -130,11 +145,11 @@ namespace BeestjeOpEenFeestje.Migrations
 
             modelBuilder.Entity("BeestjeOpEenFeestje.Models.Reservation", b =>
                 {
-                    b.Property<int>("AnimalId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("date");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
@@ -142,11 +157,11 @@ namespace BeestjeOpEenFeestje.Migrations
                     b.Property<string>("AppUserId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsConfirmed")
                         .HasColumnType("bit");
@@ -154,12 +169,9 @@ namespace BeestjeOpEenFeestje.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("AnimalId", "Date");
+                    b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
-
-                    b.HasIndex("AnimalId", "Date")
-                        .IsUnique();
 
                     b.ToTable("Reservations");
                 });
@@ -297,19 +309,26 @@ namespace BeestjeOpEenFeestje.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("BeestjeOpEenFeestje.Models.Reservation", b =>
+            modelBuilder.Entity("AnimalReservation", b =>
                 {
-                    b.HasOne("BeestjeOpEenFeestje.Models.Animal", "Animal")
-                        .WithMany("Reservations")
-                        .HasForeignKey("AnimalId")
+                    b.HasOne("BeestjeOpEenFeestje.Models.Animal", null)
+                        .WithMany()
+                        .HasForeignKey("AnimalsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BeestjeOpEenFeestje.Models.Reservation", null)
+                        .WithMany()
+                        .HasForeignKey("ReservationsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BeestjeOpEenFeestje.Models.Reservation", b =>
+                {
                     b.HasOne("BeestjeOpEenFeestje.Models.AppUser", "AppUser")
                         .WithMany("Reservations")
                         .HasForeignKey("AppUserId");
-
-                    b.Navigation("Animal");
 
                     b.Navigation("AppUser");
                 });
@@ -363,11 +382,6 @@ namespace BeestjeOpEenFeestje.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("BeestjeOpEenFeestje.Models.Animal", b =>
-                {
-                    b.Navigation("Reservations");
                 });
 
             modelBuilder.Entity("BeestjeOpEenFeestje.Models.AppUser", b =>

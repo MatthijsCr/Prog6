@@ -1,14 +1,14 @@
-﻿@model BeestjeOpEenFeestje.ViewModels.ReservationModel;
+﻿@model BeestjeOpEenFeestje.Models.Reservation;
 
-<form asp-controller="Reservation" asp-action="Step3" method="get">
-    @Html.HiddenFor(Model => Model.Reservation.Id)
+<form asp-controller="Reservation" asp-action="Confirm" method="post">
+    @Html.HiddenFor(Model => Model.Id)
 
     <div class="container-fluid">
         <div class="row">
             <div class="col-8">
                 <div class="card">
                     <h4 class="card-header">
-                        Stap 2 - Voer uw gegevens in
+                        Stap 3 - Controleer reservering
                     </h4>
                     <div class="card-body">
                         <button type="submit" class="btn btn-outline-dark">Bevestig</button>
@@ -16,7 +16,7 @@
                 </div>
             </div>
             <div class="col-4">
-                @await Html.PartialAsync("_ReservationOverview", Model.Reservation)
+                @await Html.PartialAsync("_ReservationOverview", Model)
             </div>
         </div>
     </div>

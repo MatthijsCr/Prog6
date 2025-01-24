@@ -11,6 +11,23 @@
                         Stap 1 - Kies je beestjes
                     </h4>
                     <div class="card-body">
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            var dateError = @ViewData.ModelState["date"]?.Errors.FirstOrDefault();
+                            if (dateError != null)
+                            {
+                                <p class="text-danger">
+                                    @dateError.ErrorMessage
+                                </p>
+                                <btn class="btn btn-dark" onclick="history.back();">Ga terug</btn>
+                            }
+                            else
+                            {
+                                <p class="text-danger">
+                                    @ViewData.ModelState["animal"]?.Errors[0].ErrorMessage
+                                </p>
+                            }
+                        }
                         <div class="row">
                             @foreach (Animal animal in Model.Animals) //TODO: add checkbox functionality
                             {

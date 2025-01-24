@@ -15,6 +15,7 @@ namespace BeestjeOpEenFeestje.Models
         [StringLength(150, ErrorMessage = ErrorMessages.MaxLengthAddress)]
         public string Address { get; set; }
 
-        public List<Reservation> Reservations { get; set; }
+        
+        public List<Reservation> Reservations { get; set; } = new List<Reservation>();
     }
 }
