@@ -54,8 +54,19 @@ namespace BeestjeOpEenFeestje.Controllers
 
         public IActionResult AnimalList()
         {
-            List<AnimalInfoModel> list = new();
+            List<UpdateAnimalModel> list = new();
             foreach (Animal animal in _context.Animals.Include(e => e.Reservations.Where(e => e.IsConfirmed == true)))
+            {
+                list.Add(new UpdateAnimalModel() { Id = animal.Id, Name = animal.Name, ImageURL = animal.ImageURL, Price = animal.Price, Type = animal.Type });
+            }
+            return View(list);
+        }
+
+        public IActionResult Reservations(int Id)
+        {
+            Animal? animal = _context.Animals.Include(e => e.Reservations).FirstOrDefault(e => e.Id == Id);
+
+            if (animal != null)
             {
                 List<ReservationInfoModel> reservations = new();
                 foreach (Reservation reservation in animal.Reservations)
@@ -74,14 +85,9 @@ namespace BeestjeOpEenFeestje.Controllers
 
                     reservations.Add(new ReservationInfoModel() { Date = reservationDate, Username = userName, AnimalName = animal.Name });
                 }
-                list.Add(new AnimalInfoModel() { Id = animal.Id, Name = animal.Name, ImageURL = animal.ImageURL, Price = animal.Price, Type = animal.Type });
+                return View(reservations);
             }
-            return View(list);
-        }
-
-        public IActionResult Reservations(List<ReservationInfoModel> models)
-        {
-            
+            return RedirectToAction("AnimalList");
         }
 
         public IActionResult UpdateAnimal(int id)

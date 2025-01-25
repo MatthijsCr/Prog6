@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BeestjeOpEenFeestje.ViewModels.AnimalInfoModel>
+﻿@model IEnumerable<BeestjeOpEenFeestje.ViewModels.UpdateAnimalModel>
 
 @{
     ViewData["Title"] = "Beestjes";
@@ -23,12 +23,12 @@
             foreach (var animal in Model)
             {
                 <tr>
-                    <td><img src="@animal.ImageURL" height="10px"/></td>
+                    <td><img margin="0" src="@animal.ImageURL" height="50px"/></td>
                     <td>@animal.Name</td>
                     <td>@animal.Type</td>
                     <td>@animal.Price</td>
                     <td width = "100px"><a href="@Url.Action("UpdateAnimal", "Animal", new { Id = animal.Id })" class="btn btn-primary">Bewerk</a><td>
-                    <td width ="100px"><a href="@Url.Action("AnimalInfo", "Animal", new { animal.Reservations })" class="btn btn-primary">Boekingen</a><td>
+                    <td width ="100px"><a href="@Url.Action("Reservations", "Animal", new { Id = animal.Id })" class="btn btn-primary">Boekingen</a><td>
                 </tr>
             }
         }
