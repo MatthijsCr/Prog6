@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BeestjeOpEenFeestje.Migrations
 {
     [DbContext(typeof(AnimalDbContext))]
-    [Migration("20250125103846_bookings")]
-    partial class bookings
+    [Migration("20250125111754_afterMerge")]
+    partial class afterMerge
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -86,8 +86,8 @@ namespace BeestjeOpEenFeestje.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CustomerCard")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("CustomerCard")
+                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)

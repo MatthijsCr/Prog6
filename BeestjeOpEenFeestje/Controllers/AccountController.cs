@@ -39,7 +39,7 @@ namespace BeestjeOpEenFeestje.Controllers
                     await _signInManager.RefreshSignInAsync(user);
                     if (result.Succeeded)
                     {
-                        return RedirectToAction("Index","Home");
+                        return RedirectToAction("Date","Reservation");
                     }
                 }
             }
