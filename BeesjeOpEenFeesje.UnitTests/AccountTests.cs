@@ -53,7 +53,6 @@ namespace BeesjeOpEenFeesje.UnitTests
         [TestMethod]
         public async Task Login_ValidCredentials_RedirectsToHomeIndex()
         {
-            // Arrange
             var loginModel = new LoginModel { Email = "test@example.com", Password = "Password123" };
             var user = new AppUser { Email = loginModel.Email };
 
@@ -63,10 +62,8 @@ namespace BeesjeOpEenFeesje.UnitTests
             _mockSignInManager.Setup(sm => sm.PasswordSignInAsync(user, loginModel.Password, true, false))
                 .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
 
-            // Act
             var result = await _controller.Login(loginModel) as RedirectToActionResult;
 
-            // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual("Index", result.ActionName);
             Assert.AreEqual("Home", result.ControllerName);
@@ -75,16 +72,13 @@ namespace BeesjeOpEenFeesje.UnitTests
         [TestMethod]
         public async Task Login_InvalidCredentials_ReturnsViewWithModel()
         {
-            // Arrange
             var loginModel = new LoginModel { Email = "test@example.com", Password = "WrongPassword" };
 
             _mockUserManager.Setup(um => um.FindByEmailAsync(loginModel.Email))
                 .ReturnsAsync((AppUser)null);
 
-            // Act
             var result = await _controller.Login(loginModel) as ViewResult;
 
-            // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual(loginModel, result.Model);
         }
@@ -92,7 +86,6 @@ namespace BeesjeOpEenFeesje.UnitTests
         [TestMethod]
         public async Task CreateUser_ValidModel_RedirectsToPasswordView()
         {
-            // Arrange
             var createUserModel = new CreateUserModel
             {
                 Email = "newuser@example.com",
@@ -115,10 +108,8 @@ namespace BeesjeOpEenFeesje.UnitTests
             _mockUserManager.Setup(um => um.AddToRoleAsync(It.IsAny<AppUser>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(IdentityResult.Success));
 
-            // Act
             var result = await _controller.CreateUser(createUserModel) as RedirectToActionResult;
 
-            // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual("Password", result.ActionName);
         }
@@ -126,7 +117,6 @@ namespace BeesjeOpEenFeesje.UnitTests
         [TestMethod]
         public async Task CreateUser_ExistingUser_ReturnsViewWithModelError()
         {
-            // Arrange
             var createUserModel = new CreateUserModel
             {
                 Email = "existinguser@example.com",
@@ -141,10 +131,8 @@ namespace BeesjeOpEenFeesje.UnitTests
             _mockUserManager.Setup(um => um.FindByNameAsync(createUserModel.Username))
                 .ReturnsAsync(existingUser);
 
-            // Act
             var result = await _controller.CreateUser(createUserModel) as ViewResult;
 
-            // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual(createUserModel, result.Model);
             Assert.IsTrue(_controller.ModelState.ContainsKey("Username"));
@@ -153,14 +141,11 @@ namespace BeesjeOpEenFeesje.UnitTests
         [TestMethod]
         public async Task Logout_RedirectsToLogin()
         {
-            // Arrange
             _mockSignInManager.Setup(sm => sm.SignOutAsync())
                 .Returns(Task.CompletedTask);
 
-            // Act
             var result = await _controller.Logout() as RedirectToActionResult;
 
-            // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual("Login", result.ActionName);
             Assert.AreEqual("Account", result.ControllerName);
@@ -169,7 +154,6 @@ namespace BeesjeOpEenFeesje.UnitTests
         [TestMethod]
         public void AccountsList_ReturnsViewWithUsers()
         {
-            // Arrange
             var users = new List<AppUser>
             {
                 new AppUser { UserName = "user1", Email = "user1@example.com" },
@@ -179,10 +163,8 @@ namespace BeesjeOpEenFeesje.UnitTests
             _mockUserManager.Setup(um => um.Users)
                 .Returns(users.AsQueryable());
 
-            // Act
             var result = _controller.AccountsList() as ViewResult;
 
-            // Assert
             Assert.IsNotNull(result);
             var model = result.Model as List<UpdateUserModel>;
             Assert.IsNotNull(model);
