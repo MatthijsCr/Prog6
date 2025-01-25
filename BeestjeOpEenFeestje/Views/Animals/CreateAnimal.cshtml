@@ -21,5 +21,25 @@
         <span asp-validation-for="Price" class="text-danger"></span>
     </div>
 
+    <input hidden asp-for="ImageURL" />
+    <div class="dropdown">
+        <button type="button">Select an Image</button>
+        <div class="dropdown-content">
+            @foreach (string path in ViewBag.ImageUrls)
+            {
+                <img src="@path" alt="Dierenplaatje" onclick="selectImage('@path')">
+            }
+        </div>
+    </div>
+    <input type="hidden" name="selectedImage" id="selectedImage">
+    <button type="submit">Submit</button>
     <button type="submit" class="btn btn-primary">Aanmaken</button>
 </form>
+
+@section Scripts {
+    <script>
+        function selectImage(imagePath) {
+            document.getElementById('ImageURL').value = imagePath;
+        }
+    </script>
+}

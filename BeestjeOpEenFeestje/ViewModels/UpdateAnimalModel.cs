@@ -5,6 +5,7 @@ namespace BeestjeOpEenFeestje.ViewModels
 {
     public class UpdateAnimalModel : CreateAnimalModel
     {
-        
+        [Required]
+        public required int Id { get; set; }
     }
 }

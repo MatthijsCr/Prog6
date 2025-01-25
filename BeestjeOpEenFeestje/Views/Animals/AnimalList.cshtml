@@ -1,11 +1,11 @@
-﻿@model IEnumerable<BeestjeOpEenFeestje.ViewModels.ListAnimalModel>
+﻿@model IEnumerable<BeestjeOpEenFeestje.ViewModels.UpdateAnimalModel>
 
 @{
-    ViewData["Title"] = "Gebruikers";
+    ViewData["Title"] = "Beestjes";
 }
 <div class="d-flex align-items-center">
     <h1 class="me-5">Gebruikers</h1>
-    <a href="@Url.Action("CreateUser", "Account")" class="btn btn-primary">Nieuw Beestje</a>
+    <a href="@Url.Action("CreateAnimal", "Animal")" class="btn btn-primary">Nieuw Beestje</a>
 </div>
 
 <table class="table table-striped table-bordered">
@@ -19,14 +19,14 @@
     <tbody>
         @if (Model != null && Model.Any())
         {
-            foreach (var user in Model)
+            foreach (var animal in Model)
             {
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><a href="@Url.Action("UpdateUser", "Account", new { email = user.Email })" class="btn btn-primary">Bewerk</a>
-                    <td>
+                    <td>@animal.Name</td>
+                    <td>@animal.Type</td>
+                    <td>@animal.Price</td>
+                    <td><a href="@Url.Action("UpdateAnimal", "Animal", new { Id = animal.Id })" class="btn btn-primary">Bewerk</a><td>
+                    <td><a href="@Url.Action("Reservations", "Animal", new { Id = animal.Id })" class="btn btn-primary">Boekingen</a><td>
                 </tr>
             }
         }
