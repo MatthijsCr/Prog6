@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BeestjeOpEenFeestje.Controllers
 {
@@ -125,9 +126,11 @@ namespace BeestjeOpEenFeestje.Controllers
 
         private List<string> GetImageUrls()
         {
-            string baseDirectory = AppContext.BaseDirectory;
+            string baseDirectory = Directory.GetCurrentDirectory();
 
-            string imagesFolder = Path.Combine(baseDirectory, "wwwroot", "Images");
+            string projectRoot = Path.GetFullPath(Path.Combine(baseDirectory, "../"));
+
+            string imagesFolder = Path.Combine(projectRoot, "wwwroot", "Images");
 
             if (!Directory.Exists(imagesFolder))
             {
