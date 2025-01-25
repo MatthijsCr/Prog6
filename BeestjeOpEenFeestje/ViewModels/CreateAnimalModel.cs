@@ -16,7 +16,7 @@ namespace BeestjeOpEenFeestje.ViewModels
         public required string Type { get; set; }
 
         [Required(ErrorMessage = ErrorMessages.RequiredField)]
-        [Range(0, double.MaxValue, ErrorMessage = ErrorMessages.InvalidPrice)]
+        [Range(0d, double.MaxValue, ErrorMessage = ErrorMessages.InvalidPrice)]
         public required double Price { get; set; }
     }
 }

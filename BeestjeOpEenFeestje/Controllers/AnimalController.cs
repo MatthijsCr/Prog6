@@ -45,6 +45,11 @@ namespace BeestjeOpEenFeestje.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (model.Price < 0)
+                {
+                    ModelState.AddModelError("Price", "Prijs mag niet negatief zijn");
+                    return false;
+                }
                 _context.Animals.Add(new Animal() { ImageURL = model.ImageURL, Name = model.Name, Price = model.Price, Reservations = new List<Reservation>(), Type = model.Type });
                 _context.SaveChanges();
                 return true;
@@ -118,6 +123,11 @@ namespace BeestjeOpEenFeestje.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (model.Price < 0)
+                {
+                    ModelState.AddModelError("Price", "Prijs mag niet negatief zijn");
+                    return false;
+                }
                 Animal? animal = _context.Animals.FirstOrDefault(e => e.Id == model.Id);
 
                 if (animal != null)
@@ -154,22 +164,19 @@ namespace BeestjeOpEenFeestje.Controllers
                 return new List<string>();
             }
 
-            // Get all PNG images in the folder
             string[] imageFiles = Directory.GetFiles(imagesFolderPath, "*.png");
 
-            // Convert absolute paths to relative URLs
             List<string> imageUrls = new List<string>();
             foreach (var imageFile in imageFiles)
             {
-                // Extract the relative path to use in the <img> tag
                 string relativePath = imageFile.Substring(imageFile.IndexOf("wwwroot") + "wwwroot".Length).Replace("\\", "/");
                 imageUrls.Add(relativePath);
             }
-
-            // Pass image URLs to the view
             ViewBag.ImageUrls = imageUrls;
 
             return imageUrls;
         }
+
+
     }
 }
