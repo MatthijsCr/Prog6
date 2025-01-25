@@ -1,0 +1,19 @@
+﻿@model BeestjeOpEenFeestje.ViewModels.LoginModel
+
+<h2>Inloggen</h2>
+
+<form asp-action="Login" method="post">
+    <div>
+        <label asp-for="Email">E-mail</label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label asp-for="Password">Wachtwoord</label>
+        <input asp-for="Password" type="password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Inloggen</button>
+</form>

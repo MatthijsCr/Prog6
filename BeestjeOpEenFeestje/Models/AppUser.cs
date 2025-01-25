@@ -5,11 +5,11 @@ namespace BeestjeOpEenFeestje.Models
 {
     public class AppUser : IdentityUser
     {
-        public string? CustomerCard { get; set; }
+        public CustomerCardType CustomerCard { get; set; }
 
         [Required(ErrorMessage = ErrorMessages.RequiredField)]
         [Phone(ErrorMessage = ErrorMessages.InvalidPhoneNumber)]
-        public override string PhoneNumber { get; set; }
+        public override string? PhoneNumber { get; set; }
 
         [Required(ErrorMessage = ErrorMessages.RequiredField)]
         [StringLength(150, ErrorMessage = ErrorMessages.MaxLengthAddress)]

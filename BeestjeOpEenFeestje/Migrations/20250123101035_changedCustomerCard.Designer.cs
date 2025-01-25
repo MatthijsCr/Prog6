@@ -4,6 +4,7 @@ using BeestjeOpEenFeestje.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BeestjeOpEenFeestje.Migrations
 {
     [DbContext(typeof(AnimalDbContext))]
-    partial class AnimalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250123101035_changedCustomerCard")]
+    partial class changedCustomerCard
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,46 +25,29 @@ namespace BeestjeOpEenFeestje.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("AnimalReservation", b =>
-                {
-                    b.Property<int>("AnimalsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ReservationsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AnimalsId", "ReservationsId");
-
-                    b.HasIndex("ReservationsId");
-
-                    b.ToTable("AnimalReservation");
-                });
-
             modelBuilder.Entity("BeestjeOpEenFeestje.Models.Animal", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Name")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("ImageURL")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<double>("Price")
                         .HasColumnType("float");
+
+                    b.Property<int?>("ReservationId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Name");
+
+                    b.HasIndex("ReservationId");
 
                     b.ToTable("Animals");
                 });
@@ -149,10 +135,9 @@ namespace BeestjeOpEenFeestje.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("AppUserId")
+                    b.Property<string>("CustomerId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateOnly>("Date")
@@ -161,15 +146,12 @@ namespace BeestjeOpEenFeestje.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("Reservations");
                 });
@@ -307,28 +289,20 @@ namespace BeestjeOpEenFeestje.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("AnimalReservation", b =>
+            modelBuilder.Entity("BeestjeOpEenFeestje.Models.Animal", b =>
                 {
-                    b.HasOne("BeestjeOpEenFeestje.Models.Animal", null)
-                        .WithMany()
-                        .HasForeignKey("AnimalsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("BeestjeOpEenFeestje.Models.Reservation", null)
-                        .WithMany()
-                        .HasForeignKey("ReservationsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Animals")
+                        .HasForeignKey("ReservationId");
                 });
 
             modelBuilder.Entity("BeestjeOpEenFeestje.Models.Reservation", b =>
                 {
-                    b.HasOne("BeestjeOpEenFeestje.Models.AppUser", "AppUser")
-                        .WithMany("Reservations")
-                        .HasForeignKey("AppUserId");
+                    b.HasOne("BeestjeOpEenFeestje.Models.AppUser", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId");
 
-                    b.Navigation("AppUser");
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -382,9 +356,9 @@ namespace BeestjeOpEenFeestje.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BeestjeOpEenFeestje.Models.AppUser", b =>
+            modelBuilder.Entity("BeestjeOpEenFeestje.Models.Reservation", b =>
                 {
-                    b.Navigation("Reservations");
+                    b.Navigation("Animals");
                 });
 #pragma warning restore 612, 618
         }
