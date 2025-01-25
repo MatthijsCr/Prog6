@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Text;
 
-namespace BumboApp.Controllers
+namespace BeestjeOpEenFeestje.Controllers
 {
     public class AccountController : Controller
     {
@@ -169,7 +169,7 @@ namespace BumboApp.Controllers
             return View(model);
         }
 
-        public async Task<bool> ChangeUser(UpdateUserModel model)
+        private async Task<bool> ChangeUser(UpdateUserModel model)
         {
             if (ModelState.IsValid)
             {
@@ -194,7 +194,7 @@ namespace BumboApp.Controllers
             return false;
         }
 
-        public List<string> GetRoles() 
+        private List<string> GetRoles() 
         {
             RolesHelper rolesHelper = new();
             List<IdentityRole> roles = _roleManager.Roles.ToList();

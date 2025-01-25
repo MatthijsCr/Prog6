@@ -11,7 +11,7 @@ namespace BeestjeOpEenFeestje.Models
                 "Employee" => "Werknemer",
                 "Customer" => "Gebruiker",
                 "Admin" => "Admin",
-                _ => "Werknemer",
+                _ => "Gebruiker",
             };
         }
         public string ConvertRoleToRealName(string convertname)
@@ -21,7 +21,7 @@ namespace BeestjeOpEenFeestje.Models
                 "Werknemer" => "Employee",
                 "Gebruiker" => "Customer",
                 "Admin" => "Admin",
-                _ => "Employee",
+                _ => "Customer",
             };
         }
     }
