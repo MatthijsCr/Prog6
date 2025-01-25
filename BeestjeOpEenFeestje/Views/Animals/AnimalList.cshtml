@@ -1,0 +1,40 @@
+﻿@model IEnumerable<BeestjeOpEenFeestje.ViewModels.ListAnimalModel>
+
+@{
+    ViewData["Title"] = "Gebruikers";
+}
+<div class="d-flex align-items-center">
+    <h1 class="me-5">Gebruikers</h1>
+    <a href="@Url.Action("CreateUser", "Account")" class="btn btn-primary">Nieuw Beestje</a>
+</div>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Naam</th>
+            <th>Type</th>
+            <th>Prijs</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var user in Model)
+            {
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><a href="@Url.Action("UpdateUser", "Account", new { email = user.Email })" class="btn btn-primary">Bewerk</a>
+                    <td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center">Geen Beestjes gevonden</td>
+            </tr>
+        }
+    </tbody>
+</table>

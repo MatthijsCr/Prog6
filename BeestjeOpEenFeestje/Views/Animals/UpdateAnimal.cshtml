@@ -1,0 +1,26 @@
+﻿@model BeestjeOpEenFeestje.ViewModels.UpdateAnimalModel
+
+<h2>Beestje aanmaken</h2>
+
+<form asp-action="UpdateAnimal" method="post">
+    <div>
+        <label asp-for="Name">Naam</label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label asp-for="Type">Type</label>
+        <input asp-for="Type" class="form-control" />
+        <span asp-validation-for="Type" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label asp-for="Price">Prijs</label>
+        <input type="number" min="0" max="1000" step="0.01" asp-for="Price" class="form-control" />
+        <input type="hidden" asp-for="Price"/>
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary">Opslaan</button>
+    </div>
+</form>
