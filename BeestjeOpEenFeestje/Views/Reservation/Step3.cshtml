@@ -3,6 +3,23 @@
 <form asp-controller="Reservation" asp-action="Confirm" method="post">
     @Html.HiddenFor(Model => Model.Id)
 
+    <div class="container my-4">
+        <div class="row justify-content-between align-items-center position-relative">
+            <div class="col-3 text-center">
+                <div class="bg-success text-white mx-auto">1</div>
+                <small class="d-block mt-2">Beestjes kiezen</small>
+            </div>
+            <div class="col-3 text-center">
+                <div class="bg-success text-white mx-auto">2</div>
+                <small class="d-block mt-2">Gegevens invullen</small>
+            </div>
+            <div class="col-3 text-center">
+                <div class="bg-primary text-white mx-auto">3</div>
+                <small class="d-block mt-2">Bevestigen</small>
+            </div>
+        </div>
+    </div>
+
     <div class="container-fluid">
         <div class="row">
             <div class="col-8">
@@ -10,8 +27,16 @@
                     <h4 class="card-header">
                         Stap 3 - Controleer reservering
                     </h4>
-                    <div class="card-body">
-                        <button type="submit" class="btn btn-outline-dark">Bevestig</button>
+                    <div class="card-body row">
+                        <div class="col-2">
+                            <label>Naam:</label>
+                            <p>@Model.Name</p>
+                            <label>E-mail:</label>
+                            <p>@Model.Email</p>
+                            <label>Adres:</label>
+                            <p>@Model.Address</p>
+                            <button type="submit" class="btn btn-outline-dark">Bevestig</button>
+                        </div>
                     </div>
                 </div>
             </div>

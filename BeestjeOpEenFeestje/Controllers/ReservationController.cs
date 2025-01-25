@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Diagnostics.Contracts;
 
 namespace BeestjeOpEenFeestje.Controllers
 {
@@ -19,13 +20,19 @@ namespace BeestjeOpEenFeestje.Controllers
         }
 
         [HttpPost]
-        [Route("Reserveren/Beestjes")]
-        public IActionResult Step1(DateOnly date)
+        public IActionResult SaveDate(DateOnly date)
         {
             EntityEntry<Reservation> entry = _context.Add(new Reservation() { Date = date });
             _context.SaveChanges();
 
-            List<Animal> availableAnimals = GetAvailableAnimals(date);
+            return RedirectToAction("Step1", entry.Entity);
+        }
+
+        [HttpGet]
+        [Route("Reserveren/Beestjes")]
+        public IActionResult Step1(Reservation reservation)
+        {
+            List<Animal> availableAnimals = GetAvailableAnimals(reservation.Date);
 
             if (!availableAnimals.Any())
             {
@@ -34,41 +41,34 @@ namespace BeestjeOpEenFeestje.Controllers
 
             ReservationModel viewModel = new ReservationModel
             {
-                Reservation = entry.Entity, // Reservation with Id set in db
+                Reservation = reservation, // Reservation with Id set in db
                 Animals = availableAnimals,
                 SelectedAnimals = new(),
             };
+
+            if (TempData["SelectedAnimalsError"] != null)
+            {
+                ModelState.AddModelError("animal", "Selecteer minstens één beestje.");
+            }
 
             return View(viewModel);
         }
 
         [HttpPost]
-        public IActionResult Step2(ReservationModel viewModel)
+        public IActionResult SaveAnimals(ReservationModel viewModel)
         {
-            Reservation reservation = _context.Reservations
-                .Where(r => r.Id == viewModel.Reservation.Id)
-                .Include(r => r.Animals)
-                .FirstOrDefault()
-                ?? throw new Exception("Kan reservering niet ophalen.");
+            Reservation reservation = GetReservation(viewModel.Reservation.Id);
 
             if (viewModel.SelectedAnimals == null)
             {
-                ModelState.AddModelError("animal", "Selecteer minstens één beestje.");
-
-                ReservationModel reservationModel = new()
-                {
-                    Reservation = reservation,
-                    Animals = GetAvailableAnimals(reservation.Date),
-                    SelectedAnimals = new(),
-                };
-
-                return View("Step1", reservationModel);
+                TempData["SelectedAnimalsError"] = "true";
+                return RedirectToAction("Step1", reservation);
             }
 
             List<Animal> animals = new List<Animal>();
             foreach (string animal in viewModel.SelectedAnimals)
             {
-                Animal a = _context.Animals.Where(a => a.Name.ToLower().Equals(animal.ToLower())).FirstOrDefault() 
+                Animal a = _context.Animals.Where(a => a.Name.ToLower().Equals(animal.ToLower())).FirstOrDefault()
                     ?? throw new Exception("Beestje " + animal + " bestaat niet.");
                 animals.Add(a);
             }
@@ -76,33 +76,68 @@ namespace BeestjeOpEenFeestje.Controllers
             reservation.Animals.AddRange(animals);
             _context.SaveChanges();
 
-            if (_signInManager.IsSignedIn(User))
-            {
-                RedirectToAction("Step3", reservation);
-            }
-
-            viewModel.Reservation = reservation;
-            return View(viewModel);
+            return RedirectToAction("Step2", reservation);
         }
 
         [HttpGet]
-        public IActionResult Step3(ReservationModel viewModel)
+        public IActionResult Step2(Reservation reservation)
         {
-            Reservation r = _context.Reservations
-                .Where(r => r.Id == viewModel.Reservation.Id)
-                .Include(r => r.Animals)
-                .FirstOrDefault()
-                ?? throw new Exception("Kan reservering niet vinden.");
+            Reservation r = GetReservation(reservation.Id);
+
+            if (_signInManager.IsSignedIn(User))
+            {
+                RedirectToAction("SaveCustomerInfo", r);
+            }
 
             return View(r);
         }
 
         [HttpPost]
-        public IActionResult Confirm()
+        public async Task<IActionResult> SaveCustomerInfo(Reservation reservation)
         {
+            Reservation r = GetReservation(reservation.Id);
+
+            if (_signInManager.IsSignedIn(User))
+            {
+                r.AppUser = await _signInManager.UserManager.GetUserAsync(User);
+            }
+            else
+            {
+                r.Name = reservation.Name;
+                r.Email = reservation.Email;
+                r.Address = reservation.Address;
+            }
+            _context.SaveChanges();
+
+            return RedirectToAction("Step3", r);
+        }
+
+        [HttpGet]
+        public IActionResult Step3(Reservation reservation)
+        {
+            Reservation r = GetReservation(reservation.Id);
+            return View(r);
+        }
+
+        [HttpPost]
+        public IActionResult Confirm(Reservation reservation)
+        {
+            Reservation r = GetReservation(reservation.Id);
+
+            r.IsConfirmed = true;
+            _context.SaveChanges();
+
             return View();
         }
 
+        private Reservation GetReservation(int id)
+        {
+            return _context.Reservations
+                .Where(r => r.Id == id)
+                .Include(r => r.Animals)
+                .FirstOrDefault()
+                ?? throw new Exception("Kan reservering niet ophalen.");
+        }
 
         private List<Animal> GetAvailableAnimals(DateOnly date)
         {

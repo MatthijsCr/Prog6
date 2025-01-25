@@ -14,6 +14,7 @@ namespace BeestjeOpEenFeestje.Models
 
         public string? Name { get; set; }
 
+        [StringLength(150, ErrorMessage = ErrorMessages.MaxLengthAddress)]
         public string? Address { get; set; }
 
         public string? Email { get; set; }
