@@ -1,6 +1,9 @@
 ﻿@model BeestjeOpEenFeestje.ViewModels.UpdateAnimalModel
 
-<h2>Beestje Bewerken</h2>
+<div class="d-flex align-items-center">
+    <h1 class="me-5">Beestje bewerken</h1>
+    <a href="@Url.Action("DeleteAnimal", "Animal", new { Id = Model.Id })" class="btn btn-danger">Verwijder beestje</a>
+</div>
 
 <form asp-action="UpdateAnimal" method="post">
 

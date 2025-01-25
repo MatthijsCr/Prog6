@@ -133,6 +133,18 @@ namespace BeestjeOpEenFeestje.Controllers
             return false;
         }
 
+        public IActionResult DeleteAnimal(int Id)
+        {
+            Animal? animal = _context.Animals.FirstOrDefault(e => e.Id == Id);
+
+            if (animal != null)
+            {
+                _context.Animals.Remove(animal);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("AnimalList");
+        }
+
         private List<string> GetImageUrls()
         {
             string imagesFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images");
