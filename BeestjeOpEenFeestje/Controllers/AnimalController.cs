@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -71,60 +72,60 @@ namespace BeestjeOpEenFeestje.Controllers
                     }
                     else continue;
 
-                    reservations.Add(new ReservationInfoModel() { Date = reservationDate, Username = userName });
+                    reservations.Add(new ReservationInfoModel() { Date = reservationDate, Username = userName, AnimalName = animal.Name });
                 }
                 list.Add(new AnimalInfoModel() { Id = animal.Id, Name = animal.Name, ImageURL = animal.ImageURL, Price = animal.Price, Type = animal.Type });
             }
             return View(list);
         }
 
-        //public async Task<IActionResult> UpdateUser(string email)
-        //{
-        //    if (string.IsNullOrEmpty(email)) return RedirectToAction("AccountsList");
+        public IActionResult Reservations(List<ReservationInfoModel> models)
+        {
+            
+        }
 
-        //    var user = await _userManager.FindByEmailAsync(email);
-        //    if (user != null)
-        //    {
-        //        UpdateUserModel model = new() { Address = user.Address, Email = email, PhoneNumber = user.PhoneNumber, Username = user.UserName, CustomerCard = user.CustomerCard };
-        //        return View(model);
-        //    }
-        //    return RedirectToAction("AccountsList");
-        //}
+        public IActionResult UpdateAnimal(int id)
+        {
+            Animal? animal = _context.Animals.FirstOrDefault(e => e.Id == id);
 
-        //[HttpPost]
-        //public async Task<IActionResult> UpdateUser(UpdateUserModel model)
-        //{
-        //    if (await ChangeUser(model))
-        //    {
-        //        return RedirectToAction("AccountsList");
-        //    }
-        //    return View(model);
-        //}
+            if (animal != null)
+            {
+                UpdateAnimalModel model = new UpdateAnimalModel() { Id = id, Name = animal.Name, Price = animal.Price, ImageURL = animal.ImageURL, Type = animal.Type };
+                ViewBag.ImgUrls = GetImageUrls();
+                return View(model);
+            }
+            return RedirectToAction("AnimalList");
+        }
 
-        //private async Task<bool> ChangeUser(UpdateUserModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var existingUser = await _userManager.FindByNameAsync(model.Username);
-        //        var user = await _userManager.FindByEmailAsync(model.Email);
+        [HttpPost]
+        public IActionResult UpdateAnimal(UpdateAnimalModel model)
+        {
+            if (ChangeAnimal(model))
+            {
+                return RedirectToAction("AnimalList");
+            }
+            ViewBag.ImgUrls = GetImageUrls();
+            return View(model);
+        }
 
-        //        if (user != null)
-        //        {
-        //            if (existingUser != null && existingUser != user)
-        //            {
-        //                ModelState.AddModelError("Username", "De gebruikersnaam is al in gebruik. Kies een andere gebruikersnaam.");
-        //                return false;
-        //            }
-        //            user.Address = model.Address;
-        //            user.PhoneNumber = model.PhoneNumber;
-        //            user.UserName = model.Username;
-        //            user.CustomerCard = model.CustomerCard;
-        //            var result = await _userManager.UpdateAsync(user);
-        //            if (result.Succeeded) return true;
-        //        }
-        //    }
-        //    return false;
-        //}
+        private bool ChangeAnimal(UpdateAnimalModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                Animal? animal = _context.Animals.FirstOrDefault(e => e.Id == model.Id);
+
+                if (animal != null)
+                {
+                    animal.Price = model.Price;
+                    animal.Name = model.Name;
+                    animal.Type = model.Type;
+                    animal.ImageURL = model.ImageURL;
+                    _context.SaveChanges();
+                    return true;
+                }
+            }
+            return false;
+        }
 
         private List<string> GetImageUrls()
         {

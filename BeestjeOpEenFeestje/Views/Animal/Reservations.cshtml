@@ -1,12 +1,9 @@
-﻿@model IEnumerable<BeestjeOpEenFeestje.ViewModels.AnimalInfoModel>
-
+﻿
 @{
-    ViewData["Title"] = "Beestjes";
+    ViewData["Title"] = "Reserveringen";
 }
-<div class="d-flex align-items-center">
-    <h1 class="me-5">Gebruikers</h1>
-    <a href="@Url.Action("CreateAnimal", "Animal")" class="btn btn-primary">Nieuw Beestje</a>
-</div>
+
+<h1 class="me-5">Reserveringen</h1>
 
 <table class="table table-striped table-bordered">
     <thead>
@@ -23,12 +20,14 @@
             foreach (var animal in Model)
             {
                 <tr>
-                    <td><img src="@animal.ImageURL" height="10px"/></td>
+                    <td><img src="@animal.ImageURL" height="10px" /></td>
                     <td>@animal.Name</td>
                     <td>@animal.Type</td>
                     <td>@animal.Price</td>
-                    <td width = "100px"><a href="@Url.Action("UpdateAnimal", "Animal", new { Id = animal.Id })" class="btn btn-primary">Bewerk</a><td>
-                    <td width ="100px"><a href="@Url.Action("AnimalInfo", "Animal", new { animal.Reservations })" class="btn btn-primary">Boekingen</a><td>
+                    <td width="100px"><a href="@Url.Action("UpdateAnimal", "Animal", new { Id = animal.Id })" class="btn btn-primary">Bewerk</a>
+                    <td>
+                    <td width="100px"><a href="@Url.Action("AnimalInfo", "Animal", new { animal.Reservations })" class="btn btn-primary">Boekingen</a>
+                    <td>
                 </tr>
             }
         }
