@@ -22,29 +22,46 @@ namespace BeestjeOpEenFeestje.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("AnimalReservation", b =>
+                {
+                    b.Property<int>("AnimalsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReservationsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AnimalsId", "ReservationsId");
+
+                    b.HasIndex("ReservationsId");
+
+                    b.ToTable("AnimalReservation");
+                });
+
             modelBuilder.Entity("BeestjeOpEenFeestje.Models.Animal", b =>
                 {
-                    b.Property<string>("Name")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ImageURL")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<double>("Price")
                         .HasColumnType("float");
-
-                    b.Property<int?>("ReservationId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Name");
-
-                    b.HasIndex("ReservationId");
+                    b.HasKey("Id");
 
                     b.ToTable("Animals");
                 });
@@ -132,9 +149,10 @@ namespace BeestjeOpEenFeestje.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
-                    b.Property<string>("CustomerId")
+                    b.Property<string>("AppUserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateOnly>("Date")
@@ -143,12 +161,15 @@ namespace BeestjeOpEenFeestje.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FullName")
+                    b.Property<bool>("IsConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId");
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("Reservations");
                 });
@@ -286,20 +307,28 @@ namespace BeestjeOpEenFeestje.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("BeestjeOpEenFeestje.Models.Animal", b =>
+            modelBuilder.Entity("AnimalReservation", b =>
                 {
+                    b.HasOne("BeestjeOpEenFeestje.Models.Animal", null)
+                        .WithMany()
+                        .HasForeignKey("AnimalsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BeestjeOpEenFeestje.Models.Reservation", null)
-                        .WithMany("Animals")
-                        .HasForeignKey("ReservationId");
+                        .WithMany()
+                        .HasForeignKey("ReservationsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BeestjeOpEenFeestje.Models.Reservation", b =>
                 {
-                    b.HasOne("BeestjeOpEenFeestje.Models.AppUser", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId");
+                    b.HasOne("BeestjeOpEenFeestje.Models.AppUser", "AppUser")
+                        .WithMany("Reservations")
+                        .HasForeignKey("AppUserId");
 
-                    b.Navigation("Customer");
+                    b.Navigation("AppUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -353,9 +382,9 @@ namespace BeestjeOpEenFeestje.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BeestjeOpEenFeestje.Models.Reservation", b =>
+            modelBuilder.Entity("BeestjeOpEenFeestje.Models.AppUser", b =>
                 {
-                    b.Navigation("Animals");
+                    b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,0 +1,78 @@
+﻿@model BeestjeOpEenFeestje.ViewModels.ReservationModel;
+
+<form asp-controller="Reservation" asp-action="SaveAnimals" method="post">
+    @Html.HiddenFor(Model => Model.Reservation.Id)
+
+    <div class="container my-4">
+        <div class="row justify-content-between align-items-center position-relative">
+            <div class="col-3 text-center">
+                <div class="bg-primary text-white mx-auto">1</div>
+                <small class="d-block mt-2">Beestjes kiezen</small>
+            </div>
+            <div class="col-3 text-center">
+                <div class="bg-secondary text-white mx-auto">2</div>
+                <small class="d-block mt-2">Gegevens invullen</small>
+            </div>
+            <div class="col-3 text-center">
+                <div class="bg-secondary text-white mx-auto">3</div>
+                <small class="d-block mt-2">Bevestigen</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-8">
+                <div class="card">
+                    <h4 class="card-header">
+                        Stap 1 - Kies je beestjes
+                    </h4>
+                    <div class="card-body">
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            var dateError = @ViewData.ModelState["date"]?.Errors.FirstOrDefault();
+                            if (dateError != null)
+                            {
+                                <p class="text-danger">
+                                    @dateError.ErrorMessage
+                                </p>
+                                <btn class="btn btn-dark" onclick="history.back();">Ga terug</btn>
+                            }
+                            else
+                            {
+                                <p class="text-danger">
+                                    @ViewData.ModelState["animal"]?.Errors[0].ErrorMessage
+                                </p>
+                            }
+                        }
+                        <div class="row">
+                            @foreach (Animal animal in Model.Animals) //TODO: add checkbox functionality
+                            {
+                                <div class="col-2 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-header d-flex flex-column align-items-center">
+                                            <div class="mb-1">
+                                                @animal.Name
+                                            </div>
+                                            <input class="form-check-input" type="checkbox" name="SelectedAnimals" value="@animal.Name" />
+                                        </div>
+                                        <div class="card-body d-flex align-items-center">
+                                            <img src="@animal.ImageURL" alt="@animal.Name" class="card-img" />
+                                        </div>
+                                        <div class="card-footer d-flex justify-content-center">
+                                            € @animal.Price.ToString("F2")
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <button type="submit" class="btn btn-outline-dark">Bevestig selectie</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                @await Html.PartialAsync("_ReservationOverview", Model.Reservation)
+            </div>
+        </div>
+    </div>
+</form>

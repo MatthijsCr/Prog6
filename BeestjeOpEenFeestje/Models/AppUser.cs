@@ -13,6 +13,9 @@ namespace BeestjeOpEenFeestje.Models
 
         [Required(ErrorMessage = ErrorMessages.RequiredField)]
         [StringLength(150, ErrorMessage = ErrorMessages.MaxLengthAddress)]
-        public string? Address { get; set; }
+        public string Address { get; set; }
+
+        
+        public List<Reservation> Reservations { get; set; } = new List<Reservation>();
     }
 }
