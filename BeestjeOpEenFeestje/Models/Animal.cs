@@ -5,7 +5,7 @@ namespace BeestjeOpEenFeestje.Models
     public class Animal
     {
         [Key]
-        public required int Id { get; set; }
+        public int Id { get; set; }
 
         [Required(ErrorMessage = ErrorMessages.RequiredField)]
         [MaxLength(50, ErrorMessage = ErrorMessages.MaxLengthName)]

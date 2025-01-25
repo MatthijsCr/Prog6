@@ -30,7 +30,7 @@ namespace BeestjeOpEenFeestje.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin,Employee")]
-        public async Task<IActionResult> CreateAnimal(CreateAnimalModel model)
+        public IActionResult CreateAnimal(CreateAnimalModel model)
         {
             if(MakeAnimal(model))
             {
@@ -44,6 +44,8 @@ namespace BeestjeOpEenFeestje.Controllers
         {
             if (ModelState.IsValid)
             {
+                _context.Animals.Add(new Animal() { ImageURL = model.ImageURL, Name = model.Name, Price = model.Price, Reservations = new List<Reservation>(), Type = model.Type });
+                _context.SaveChanges();
                 return true;
             }
             return false;
@@ -126,25 +128,27 @@ namespace BeestjeOpEenFeestje.Controllers
 
         private List<string> GetImageUrls()
         {
-            string baseDirectory = Directory.GetCurrentDirectory();
+            string imagesFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images");
 
-            string projectRoot = Path.GetFullPath(Path.Combine(baseDirectory, "../"));
-
-            string imagesFolder = Path.Combine(projectRoot, "wwwroot", "Images");
-
-            if (!Directory.Exists(imagesFolder))
+            if (!Directory.Exists(imagesFolderPath))
             {
                 return new List<string>();
             }
 
-            string[] imageFiles = Directory.GetFiles(imagesFolder, "*.png", SearchOption.TopDirectoryOnly);
+            // Get all PNG images in the folder
+            string[] imageFiles = Directory.GetFiles(imagesFolderPath, "*.png");
 
+            // Convert absolute paths to relative URLs
             List<string> imageUrls = new List<string>();
-            foreach (string imageFile in imageFiles)
+            foreach (var imageFile in imageFiles)
             {
+                // Extract the relative path to use in the <img> tag
                 string relativePath = imageFile.Substring(imageFile.IndexOf("wwwroot") + "wwwroot".Length).Replace("\\", "/");
                 imageUrls.Add(relativePath);
             }
+
+            // Pass image URLs to the view
+            ViewBag.ImageUrls = imageUrls;
 
             return imageUrls;
         }

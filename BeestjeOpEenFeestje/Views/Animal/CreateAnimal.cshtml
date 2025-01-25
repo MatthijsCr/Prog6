@@ -1,8 +1,8 @@
 ﻿@model BeestjeOpEenFeestje.ViewModels.CreateAnimalModel
 
-<h2>Gebruiker aanmaken</h2>
+<h2>Beestje maken</h2>
 
-<form asp-action="CreateUser" method="post">
+<form asp-action="CreateAnimal" method="post">
     <div>
         <label asp-for="Name">Naam</label>
         <input asp-for="Name" class="form-control" />
@@ -16,30 +16,81 @@
     </div>
 
     <div>
-        <label asp-for="Price">E-mail</label>
+        <label asp-for="Price">Prijs</label>
         <input asp-for="Price" class="form-control" />
         <span asp-validation-for="Price" class="text-danger"></span>
     </div>
 
-    <input hidden asp-for="ImageURL" />
+    <!-- Hidden field to hold the selected image URL -->
+    <input type="hidden" asp-for="ImageURL" id="ImageURL" />
+
+    <!-- Custom Image Dropdown -->
     <div class="dropdown">
-        <button type="button">Select an Image</button>
+        <button type="button" class="dropbtn">Kies een Dierenplaatje</button>
         <div class="dropdown-content">
             @foreach (string path in ViewBag.ImageUrls)
             {
-                <img src="@path" alt="Dierenplaatje" onclick="selectImage('@path')">
+                    <a href="#" onclick="selectImage('@path')">
+                        <img src="@path" alt="Dierenplaatje" class="dropdown-image">
+                    </a>
             }
         </div>
     </div>
-    <input type="hidden" name="selectedImage" id="selectedImage">
-    <button type="submit">Submit</button>
+
     <button type="submit" class="btn btn-primary">Aanmaken</button>
 </form>
 
 @section Scripts {
-    <script>
-        function selectImage(imagePath) {
-            document.getElementById('ImageURL').value = imagePath;
-        }
-    </script>
+        <script>
+            // JavaScript function to update the hidden input with the selected image URL
+            function selectImage(imagePath) {
+                // Set the value of the hidden ImageURL input field
+                document.getElementById('ImageURL').value = imagePath;
+
+                // Optionally, update the button text to show the selected image
+                var button = document.querySelector('.dropbtn');
+                button.innerHTML = 'Gekozen plaatje: <img src="' + imagePath + '" alt="Selected Image" style="width: 50px; height: auto;">';
+            }
+        </script>
 }
+
+<style>
+    /* Styling for the dropdown */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropbtn {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .dropdown:hover .dropbtn {
+        background-color: #3e8e41;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        width: 330px;
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        overflow-y: auto;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .dropdown-image{
+        width: 100px;
+        height: auto;
+        margin: 10px
+    }
+</style>
