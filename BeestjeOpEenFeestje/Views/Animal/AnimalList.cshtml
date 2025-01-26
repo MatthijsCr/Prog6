@@ -1,0 +1,42 @@
+﻿@model IEnumerable<BeestjeOpEenFeestje.ViewModels.UpdateAnimalModel>
+
+@{
+    ViewData["Title"] = "Beestjes";
+}
+<div class="d-flex align-items-center">
+    <h1 class="me-5">Gebruikers</h1>
+    <a href="@Url.Action("CreateAnimal", "Animal")" class="btn btn-primary">Nieuw Beestje</a>
+</div>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Plaatje</th>
+            <th>Naam</th>
+            <th>Type</th>
+            <th>Prijs</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var animal in Model)
+            {
+                <tr>
+                    <td><img margin="0" src="@animal.ImageURL" height="50px"/></td>
+                    <td>@animal.Name</td>
+                    <td>@animal.Type</td>
+                    <td>@animal.Price</td>
+                    <td width = "100px"><a href="@Url.Action("UpdateAnimal", "Animal", new { Id = animal.Id })" class="btn btn-primary">Bewerk</a><td>
+                    <td width ="100px"><a href="@Url.Action("Reservations", "Animal", new { Id = animal.Id })" class="btn btn-primary">Boekingen</a><td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center">Geen Beestjes gevonden</td>
+            </tr>
+        }
+    </tbody>
+</table>
