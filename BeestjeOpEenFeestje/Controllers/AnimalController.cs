@@ -156,22 +156,31 @@ namespace BeestjeOpEenFeestje.Controllers
         }
 
         private List<string> GetImageUrls()
-        {
+{
+            // Get the path to the "wwwroot/Images" folder
             string imagesFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images");
 
+            // Check if the folder exists
             if (!Directory.Exists(imagesFolderPath))
             {
                 return new List<string>();
             }
 
-            string[] imageFiles = Directory.GetFiles(imagesFolderPath, "*.png");
+            // Get all image files (supporting multiple formats)
+            var imageFiles = Directory.GetFiles(imagesFolderPath, "*.*", SearchOption.TopDirectoryOnly)
+                                           .Where(file => file.EndsWith(".png", StringComparison.OrdinalIgnoreCase));
 
+
+            // Convert file paths to URLs
             List<string> imageUrls = new List<string>();
             foreach (var imageFile in imageFiles)
             {
-                string relativePath = imageFile.Substring(imageFile.IndexOf("wwwroot") + "wwwroot".Length).Replace("\\", "/");
+                // Generate a relative URL for each image
+                string relativePath = "/Images/" + Path.GetFileName(imageFile);
                 imageUrls.Add(relativePath);
             }
+
+            // Store the URLs in ViewBag (if needed for the view)
             ViewBag.ImageUrls = imageUrls;
 
             return imageUrls;
