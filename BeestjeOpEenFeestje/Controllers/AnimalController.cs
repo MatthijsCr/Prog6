@@ -25,7 +25,7 @@ namespace BeestjeOpEenFeestje.Controllers
         [Authorize(Roles = "Admin,Employee")]
         public IActionResult CreateAnimal()
         {
-            ViewBag.ImgUrls = GetImageUrls();
+            ViewBag.ImageUrls = GetImageUrls();
             return View();
         }
 
@@ -176,7 +176,5 @@ namespace BeestjeOpEenFeestje.Controllers
 
             return imageUrls;
         }
-
-
     }
 }
