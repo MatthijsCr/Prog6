@@ -1,4 +1,7 @@
-name: Build and deploy ASP.Net Core app to Azure Web App - BeestjeOpEenFeestje
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy ASP.Net Core app to Azure Web App - BeestjeopEenFeestje
 
 on:
   push:
@@ -19,20 +22,16 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Build with dotnet
-        run: |
-          cd BeestjeOpEenFeestje  # Navigate to your project folder
-          dotnet build --configuration Release
+        run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: |
-          cd BeestjeOpEenFeestje  # Navigate to your project folder
-          dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"  # Publish to output folder
+        run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp  # Upload the output folder
+          path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
     runs-on: windows-latest
@@ -41,25 +40,26 @@ jobs:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write  # This is required for requesting the JWT
+      id-token: write #This is required for requesting the JWT
 
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: .net-app
-
+      
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_B1C9F1C18F6544E08E6DCDE13FCDBDB1 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_73723CC1E8A147978E595495FA4030C1 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_B1B3D9A6EBED4C6EBAA896BAB5D68202 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_FC080B38EAC04617BB725E664743B5A9 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_F22DB216437F41D3A63A42F44496E6F1 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_40DDC403482145AA8D4F145366423C75 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'BeestjeOpEenFeestje'
+          app-name: 'BeestjeopEenFeestje'
           slot-name: 'Production'
-          package: './BeestjeOpEenFeestje'  # Specify the correct path to the published folder
+          package: .
+          
