@@ -31,8 +31,8 @@ namespace BeestjeOpEenFeestje.Migrations
                     { 12, "/images/SeaLion.png", "Zeehond", 100.0, "Sneeuw" },
                     { 13, "/images/Camel.png", "Kameel", 120.0, "Woestijn" },
                     { 14, "/images/Snake.png", "Slang", 90.0, "Woestijn" },
-                    { 15, "/images/TRex.png", "T-Rex", 1000.0, "VIP" },
-                    { 16, "/images/Unicorn.png", "Unicorn", 1500.0, "VIP" }
+                    { 15, "/images/TRex.png", "T-Rex", 500.0, "VIP" },
+                    { 16, "/images/Unicorn.png", "Unicorn", 1000.0, "VIP" }
                 });
         }
 
