@@ -16,7 +16,6 @@ namespace BeestjeOpEenFeestje.Controllers
         private const int CardDiscount = 10;
         private const int LetterCombo = 2;
 
-
         private readonly AnimalDbContext _context = context;
         private readonly SignInManager<AppUser> _signInManager = signInManager;
 
@@ -50,7 +49,6 @@ namespace BeestjeOpEenFeestje.Controllers
             {
                 Reservation = reservation, // Reservation with Id set in db
                 Animals = availableAnimals,
-                SelectedAnimals = new(),
             };
 
             if (TempData["SelectedAnimalsError"] != null)
@@ -79,11 +77,10 @@ namespace BeestjeOpEenFeestje.Controllers
 
             else if (viewModel.SelectedAnimals == null || !await AreAnimalsAllowed(animals, reservation.Date))
             {
-                ReservationModel rm = new()
+                ReservationModel rm = new ReservationModel
                 {
                     Reservation = reservation,
                     Animals = GetAvailableAnimals(reservation.Date),
-                    SelectedAnimals = new(),
                 };
                 return View("Step1", rm);
             }
@@ -151,6 +148,26 @@ namespace BeestjeOpEenFeestje.Controllers
         public IActionResult Confirm(Reservation reservation)
         {
             Reservation r = GetReservation(reservation.Id);
+
+            // Check if animals are still available
+            List<Animal> animals = GetAvailableAnimals(r.Date);
+            foreach (Animal ra in r.Animals)
+            {
+                if (!animals.Where(a => a.Id == ra.Id).Any())
+                {
+                    r.Animals.Clear();
+                    _context.SaveChanges();
+
+                    ReservationModel viewModel = new ReservationModel
+                    {
+                        Reservation = r,
+                        Animals = animals,
+                    };
+
+                    ModelState.AddModelError("available", "Eerder geselecteerde dier(en) zijn niet meer beschikbaar.");
+                    return View("Step1", viewModel);
+                }
+            }
 
             r.IsConfirmed = true;
             _context.SaveChanges();
@@ -248,6 +265,7 @@ namespace BeestjeOpEenFeestje.Controllers
             List<Animal> availableAnimals = new List<Animal>();
             List<Reservation> reservationsOnDate = _context.Reservations
                 .Where(r => r.Date.Equals(date))
+                .Where(r => r.IsConfirmed.Equals(true))
                 .Include(r => r.Animals)
                 .ToList();
 

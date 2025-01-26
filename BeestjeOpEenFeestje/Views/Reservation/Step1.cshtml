@@ -31,6 +31,7 @@
                         @if (!ViewData.ModelState.IsValid)
                         {
                             var dateError = @ViewData.ModelState["date"]?.Errors.FirstOrDefault();
+                            var availabilityError = @ViewData.ModelState["available"]?.Errors.FirstOrDefault();
                             if (dateError != null)
                             {
                                 <p class="text-danger">
@@ -42,6 +43,10 @@
                             {
                                 <p class="text-danger">
                                     @Html.ValidationMessageFor(m => m.SelectedAnimals)
+                                    @if (availabilityError != null)
+                                    {
+                                        @availabilityError.ErrorMessage
+                                    }
                                 </p>
                             }
                         }
