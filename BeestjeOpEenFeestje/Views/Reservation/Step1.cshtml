@@ -41,12 +41,12 @@
                             else
                             {
                                 <p class="text-danger">
-                                    @ViewData.ModelState["animal"]?.Errors[0].ErrorMessage
+                                    @Html.ValidationMessageFor(m => m.SelectedAnimals)
                                 </p>
                             }
                         }
                         <div class="row">
-                            @foreach (Animal animal in Model.Animals) //TODO: add checkbox functionality
+                            @foreach (Animal animal in Model.Animals)
                             {
                                 <div class="col-2 mb-3">
                                     <div class="card h-100">
@@ -66,7 +66,10 @@
                                 </div>
                             }
                         </div>
-                        <button type="submit" class="btn btn-outline-dark">Bevestig selectie</button>
+                        @if (ViewData.ModelState["date"]?.Errors.Count == 0)
+                        {
+                            <button type="submit" class="btn btn-outline-dark">Bevestig selectie</button>
+                        }
                     </div>
                 </div>
             </div>

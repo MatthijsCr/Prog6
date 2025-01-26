@@ -10,6 +10,7 @@ namespace BeestjeOpEenFeestje.ViewModels
 
         public List<Animal> Animals { get; set; }
 
+        [Required(ErrorMessage = ErrorMessages.NoAnimalsSelected)]
         public List<string> SelectedAnimals { get; set; }
     }
 }
