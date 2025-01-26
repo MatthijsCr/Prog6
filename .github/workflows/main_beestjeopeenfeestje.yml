@@ -11,31 +11,28 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.x'
 
-      # Restore dependencies using the solution file in the BeestjeOpEenFeestje folder
-      - name: Restore Dependencies
-        run: dotnet restore BeestjeOpEenFeestje/BeestjeOpEenFeestje.sln
-
-      # Build the solution inside the BeestjeOpEenFeestje folder
       - name: Build with dotnet
-        run: dotnet build BeestjeOpEenFeestje/BeestjeOpEenFeestje.sln --configuration Release
+        run: |
+          cd BeestjeOpEenFeestje  # Navigate to your project folder
+          dotnet build --configuration Release
 
-      # Publish the app, specifying the .csproj file inside the BeestjeOpEenFeestje folder
-            - name: Publish with dotnet
-        run: dotnet publish BeestjeOpEenFeestje/BeestjeOpEenFeestje.csproj -c Release -o "C:\Program Files\dotnet\myapp"
+      - name: dotnet publish
+        run: |
+          cd BeestjeOpEenFeestje  # Navigate to your project folder
+          dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"  # Publish to output folder
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: ${{env.DOTNET_ROOT}}/myapp  # Upload the output folder
 
   deploy:
     runs-on: windows-latest
@@ -43,6 +40,8 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    permissions:
+      id-token: write  # This is required for requesting the JWT
 
     steps:
       - name: Download artifact from build job
@@ -63,4 +62,4 @@ jobs:
         with:
           app-name: 'BeestjeOpEenFeestje'
           slot-name: 'Production'
-          package: ${{env.DOTNET_ROOT}}/myapp
+          package: './BeestjeOpEenFeestje'  # Specify the correct path to the published folder
