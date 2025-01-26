@@ -28,8 +28,8 @@ jobs:
         run: dotnet build BeestjeOpEenFeestje/BeestjeOpEenFeestje.sln --configuration Release
 
       # Publish the app, specifying the .csproj file inside the BeestjeOpEenFeestje folder
-      - name: Publish with dotnet
-        run: dotnet publish BeestjeOpEenFeestje/BeestjeOpEenFeestje.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
+            - name: Publish with dotnet
+        run: dotnet publish BeestjeOpEenFeestje/BeestjeOpEenFeestje.csproj -c Release -o "C:\Program Files\dotnet\myapp"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
