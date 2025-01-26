@@ -196,7 +196,7 @@ namespace BeestjeOpEenFeestje.Controllers
             return price;
         }
 
-        private async Task<List<Discount>> CalculateDiscount(List<Animal> animals, DateOnly date)
+        internal async Task<List<Discount>> CalculateDiscount(List<Animal> animals, DateOnly date)
         {
             List<Discount> discounts = new List<Discount>();
             AppUser? user = await _signInManager.UserManager.GetUserAsync(User);
@@ -235,7 +235,7 @@ namespace BeestjeOpEenFeestje.Controllers
             return discounts;
         }
 
-        private async Task<bool> AreAnimalsAllowed(List<Animal> animals, DateOnly date)
+        internal async Task<bool> AreAnimalsAllowed(List<Animal> animals, DateOnly date)
         {
             AppUser? user = await _signInManager.UserManager.GetUserAsync(User);
 
@@ -250,6 +250,8 @@ namespace BeestjeOpEenFeestje.Controllers
             if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
             {
                 if (animals.Where(a => a.Name.ToLower().Equals("pinguïn")).Any())
+                    return false;
+                if (animals.Where(a => a.Name.ToLower().Equals("pinguin")).Any())
                     return false;
             }
 
@@ -269,8 +271,16 @@ namespace BeestjeOpEenFeestje.Controllers
             {
                 if (user.CustomerCard.Equals(CustomerCardType.Geen) && animals.Count > 3)
                 {
-                    if (!date.DayOfWeek.Equals(DayOfWeek.Wednesday) && animals.Count <= 4) // Self added rule for signed in users without customer card
+                    if (!date.DayOfWeek.Equals(DayOfWeek.Wednesday))
+                    {
+                        ModelState.AddModelError("", "Max. 3 beestjes zonder klantenkaart.");
                         return false;
+                    }
+                    else if (animals.Count > 4) // Self added rule for signed in users without customer card
+                    {
+                        ModelState.AddModelError("", "Max. 4 beestjes op woensdag zonder klantenkaart.");
+                        return false;
+                    }
                 }
                 else if (user.CustomerCard.Equals(CustomerCardType.Zilver) && animals.Count > 4)
                     return false;
