@@ -65,8 +65,8 @@ namespace BeesjeOpEenFeesje.UnitTests
             var result = await _controller.Login(loginModel) as RedirectToActionResult;
 
             Assert.IsNotNull(result);
-            Assert.AreEqual("Index", result.ActionName);
-            Assert.AreEqual("Home", result.ControllerName);
+            Assert.AreEqual("Date", result.ActionName);
+            Assert.AreEqual("Reservation", result.ControllerName);
         }
 
         [TestMethod]

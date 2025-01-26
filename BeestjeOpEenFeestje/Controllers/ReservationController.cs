@@ -200,7 +200,7 @@ namespace BeestjeOpEenFeestje.Controllers
             return price;
         }
 
-        private async Task<List<Discount>> CalculateDiscount(List<Animal> animals, DateOnly date)
+        internal async Task<List<Discount>> CalculateDiscount(List<Animal> animals, DateOnly date)
         {
             List<Discount> discounts = new List<Discount>();
             AppUser? user = await _signInManager.UserManager.GetUserAsync(User);
@@ -255,7 +255,7 @@ namespace BeestjeOpEenFeestje.Controllers
             return discounts;
         }
 
-        private async Task<bool> AreAnimalsAllowed(List<Animal> animals, DateOnly date)
+        internal async Task<bool> AreAnimalsAllowed(List<Animal> animals, DateOnly date)
         {
             ModelState.Clear();
             AppUser? user = await _signInManager.UserManager.GetUserAsync(User);
@@ -276,7 +276,7 @@ namespace BeestjeOpEenFeestje.Controllers
 
             if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
             {
-                if (animals.Where(a => a.Name.ToLower().Equals("pinguïn")).Any())
+                if (animals.Where(a => a.Name.ToLower().Equals("pinguïn")).Any() || animals.Where(a => a.Name.ToLower().Equals("pinguin")).Any())
                 {
                     ModelState.AddModelError("", "Dieren in pak werken alleen doordeweeks");
                     return false;
