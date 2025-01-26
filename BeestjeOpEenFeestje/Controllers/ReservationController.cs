@@ -278,7 +278,7 @@ namespace BeestjeOpEenFeestje.Controllers
             {
                 if (animals.Where(a => a.Name.ToLower().Equals("pinguïn")).Any())
                 {
-                    ModelState.AddModelError("", "Penguïns mogen alleen doordeweeks gereserveerd worden.");
+                    ModelState.AddModelError("", "Dieren in pak werken alleen doordeweeks");
                     return false;
                 }
             }
@@ -287,7 +287,7 @@ namespace BeestjeOpEenFeestje.Controllers
             {
                 if (animals.Where(a => a.Type.ToLower().Equals("woestijn")).Any())
                 {
-                    ModelState.AddModelError("", "Beestjes van type woestijn mogen alleen tussen maart en september.");
+                    ModelState.AddModelError("", "Brrrr – Veelste koud");
                     return false;
                 }
             }
