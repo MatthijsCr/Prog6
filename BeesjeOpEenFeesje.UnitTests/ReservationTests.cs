@@ -129,14 +129,14 @@ namespace BeesjeOpEenFeesje.UnitTests
         {
             var animals = new List<Animal>
             {
-                new Animal { Id = 3, Name = "Cow", Type = "Boerderij", Price = 15.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
-                new Animal { Id = 4, Name = "Cow", Type = "Boerderij", Price = 15.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
-                new Animal { Id = 5, Name = "Cow", Type = "Boerderij", Price = 15.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
-                new Animal { Id = 6, Name = "Cow", Type = "Boerderij", Price = 15.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
-                new Animal { Id = 7, Name = "Cow", Type = "Boerderij", Price = 15.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
-                new Animal { Id = 8, Name = "Cow", Type = "Boerderij", Price = 15.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
-                new Animal { Id = 9, Name = "Cow", Type = "Boerderij", Price = 15.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
-                new Animal { Id = 10, Name = "Cow", Type = "Boerderij", Price = 15.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" }
+                new Animal { Id = 3, Name = "Koe", Type = "Boerderij", Price = 15.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+                new Animal { Id = 4, Name = "Koe", Type = "Boerderij", Price = 15.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+                new Animal { Id = 5, Name = "Koe", Type = "Boerderij", Price = 15.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+                new Animal { Id = 6, Name = "Koe", Type = "Boerderij", Price = 15.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+                new Animal { Id = 7, Name = "Koe", Type = "Boerderij", Price = 15.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+                new Animal { Id = 8, Name = "Koe", Type = "Boerderij", Price = 15.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+                new Animal { Id = 9, Name = "Koe", Type = "Boerderij", Price = 15.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+                new Animal { Id = 10, Name = "Koe", Type = "Boerderij", Price = 15.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" }
             };
 
             _userManagerMock.Setup(m => m.GetUserAsync(It.IsAny<System.Security.Claims.ClaimsPrincipal>()))
@@ -151,9 +151,9 @@ namespace BeesjeOpEenFeesje.UnitTests
         {
             var animals = new List<Animal>
         {
-            new Animal { Id = 1, Name = "Lion", Type = "Wild", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
-            new Animal { Id = 2, Name = "Penguin", Type = "Arctic", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
-            new Animal { Id = 3, Name = "Cow", Type = "Boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+            new Animal { Id = 1, Name = "Koe", Type = "Wild", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+            new Animal { Id = 2, Name = "Geit", Type = "Arctic", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+            new Animal { Id = 3, Name = "Varken", Type = "Boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
             new Animal { Id = 4, Name = "Duck", Type = "Boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" }
         };
             var user = new AppUser { CustomerCard = CustomerCardType.Geen };
@@ -169,9 +169,9 @@ namespace BeesjeOpEenFeesje.UnitTests
         {
             var animals = new List<Animal>
         {
-            new Animal { Id = 1, Name = "Lion", Type = "Wild", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
-            new Animal { Id = 2, Name = "Penguin", Type = "Arctic", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
-            new Animal { Id = 3, Name = "Cow", Type = "Boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+            new Animal { Id = 1, Name = "Koe", Type = "Wild", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+            new Animal { Id = 2, Name = "Geit", Type = "Arctic", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+            new Animal { Id = 3, Name = "Varken", Type = "Boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
             new Animal { Id = 4, Name = "Duck", Type = "Boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" }
         };
             var user = new AppUser { CustomerCard = CustomerCardType.Geen };
@@ -187,10 +187,10 @@ namespace BeesjeOpEenFeesje.UnitTests
         {
             var animals = new List<Animal>
         {
-            new Animal { Id = 1, Name = "Lion", Type = "boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
-            new Animal { Id = 2, Name = "Penguin", Type = "Arctic", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
-            new Animal { Id = 3, Name = "Cow", Type = "Boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
-            new Animal { Id = 4, Name = "Duck", Type = "Boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+            new Animal { Id = 1, Name = "Koe", Type = "boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+            new Animal { Id = 2, Name = "Geit", Type = "Arctic", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+            new Animal { Id = 3, Name = "Varken", Type = "Boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+            new Animal { Id = 4, Name = "Kip", Type = "Boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
             new Animal { Id = 5, Name = "Eend", Type = "Boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" }
         };
             var user = new AppUser { CustomerCard = CustomerCardType.Geen };
@@ -206,11 +206,11 @@ namespace BeesjeOpEenFeesje.UnitTests
         {
             var animals = new List<Animal>
         {
-            new Animal { Id = 1, Name = "Lion", Type = "Wild", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
-            new Animal { Id = 2, Name = "Penguin", Type = "Arctic", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
-            new Animal { Id = 3, Name = "Cow", Type = "Boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
-            new Animal { Id = 4, Name = "Duck", Type = "Boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
-            new Animal { Id = 5, Name = "Sheep", Type = "Boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" }
+            new Animal { Id = 1, Name = "Koe", Type = "Wild", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+            new Animal { Id = 2, Name = "Geit", Type = "Arctic", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+            new Animal { Id = 3, Name = "Varken", Type = "Boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+            new Animal { Id = 4, Name = "Kip", Type = "Boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+            new Animal { Id = 5, Name = "Eend", Type = "Boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" }
         };
             var user = new AppUser { CustomerCard = CustomerCardType.Zilver };
             _userManagerMock.Setup(m => m.GetUserAsync(It.IsAny<System.Security.Claims.ClaimsPrincipal>())).ReturnsAsync(user);
@@ -225,10 +225,10 @@ namespace BeesjeOpEenFeesje.UnitTests
         {
             var animals = new List<Animal>
         {
-            new Animal { Id = 1, Name = "Lion", Type = "Wild", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
-            new Animal { Id = 2, Name = "Penguin", Type = "Arctic", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
-            new Animal { Id = 3, Name = "Cow", Type = "Boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
-            new Animal { Id = 4, Name = "Duck", Type = "Boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" }
+            new Animal { Id = 1, Name = "Koe", Type = "Wild", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+            new Animal { Id = 2, Name = "Geit", Type = "Arctic", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+            new Animal { Id = 3, Name = "Varken", Type = "Boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+            new Animal { Id = 4, Name = "Eend", Type = "Boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" }
         };
             var user = new AppUser { CustomerCard = CustomerCardType.Zilver };
             _userManagerMock.Setup(m => m.GetUserAsync(It.IsAny<System.Security.Claims.ClaimsPrincipal>())).ReturnsAsync(user);
@@ -258,10 +258,10 @@ namespace BeesjeOpEenFeesje.UnitTests
         {
             var animals = new List<Animal>
         {
-            new Animal { Id = 1, Name = "Lion", Type = "Wild", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
-            new Animal { Id = 2, Name = "Penguin", Type = "Arctic", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
-            new Animal { Id = 3, Name = "Cow", Type = "Boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
-            new Animal { Id = 4, Name = "Duck", Type = "Boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" }
+            new Animal { Id = 1, Name = "Koe", Type = "Wild", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+            new Animal { Id = 2, Name = "Geit", Type = "Arctic", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+            new Animal { Id = 3, Name = "Varken", Type = "Boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+            new Animal { Id = 4, Name = "Eend", Type = "Boerderij", Price = 20.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" }
         };
 
             var result = await _controller.AreAnimalsAllowed(animals, new DateOnly(2025, 01, 26));
@@ -353,15 +353,22 @@ namespace BeesjeOpEenFeesje.UnitTests
         [TestMethod]
         public async Task CalculateDiscount_ShouldNotExceedMaxDiscount()
         {
-            DateOnly date = new DateOnly(2025, 1, 26);
+            DateOnly date = new DateOnly(2025, 1, 27);
             List<Animal> animals = new List<Animal>
         {
             new Animal { Id = 1, Name = "dier", Type = "diertje", Price = 50.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
 
-            new Animal { Id = 1, Name = "Eend", Type = "diertje", Price = 50.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
+            new Animal { Id = 1, Name = "abcdefghijklmno", Type = "diertje", Price = 50.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png" },
 
             new Animal {Id = 1, Name = "dier", Type = "diertje", Price = 50.0, ImageURL = "PlaatjesMakenNiksUitVoorDit.png"}
         };
+
+            /* Kortingen
+             * ma: 15%
+             * 3 types: 10%
+             * letter combo: 15 * 2 = 30
+             * 
+             * Totaal: 65 */
 
             var discounts = await _controller.CalculateDiscount(animals, date);
 
