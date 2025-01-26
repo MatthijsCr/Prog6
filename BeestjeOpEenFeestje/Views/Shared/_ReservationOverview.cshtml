@@ -13,7 +13,7 @@
             <ul>
                 @foreach (Animal animal in Model.Animals)
                 {
-                    <li>@animal.Name - € @animal.Price</li>
+                    <li>@animal.Name - € @animal.Price.ToString("F2")</li>
                 }
             </ul>
         </div>

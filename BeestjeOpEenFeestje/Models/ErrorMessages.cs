@@ -8,6 +8,8 @@
         public const string MaxLengthAddress = "Adres" + MaxLength;
         public const string MaxLengthName = "Naam" + MaxLength;
 
+        public const string NoAnimalsSelected = "Selecteer minstens één beestje.";
+
         private const string MaxLength = " mag maximaal {0} tekens bevatten.";
     }
 }
