@@ -4,9 +4,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System.Diagnostics.Contracts;
-using System.Globalization;
-using System.Security.Principal;
 
 namespace BeestjeOpEenFeestje.Controllers
 {
@@ -70,14 +67,17 @@ namespace BeestjeOpEenFeestje.Controllers
             Reservation reservation = GetReservation(viewModel.Reservation.Id);
 
             List<Animal> animals = new List<Animal>();
-            foreach (string animal in viewModel.SelectedAnimals)
+            if (viewModel.SelectedAnimals != null)
             {
-                Animal a = _context.Animals.Where(a => a.Name.ToLower().Equals(animal.ToLower())).FirstOrDefault()
-                    ?? throw new Exception("Beestje " + animal + " bestaat niet.");
-                animals.Add(a);
+                foreach (int animalId in viewModel.SelectedAnimals)
+                {
+                    Animal a = _context.Animals.Where(a => a.Id == animalId).FirstOrDefault()
+                        ?? throw new Exception("Beestje bestaat niet.");
+                    animals.Add(a);
+                }
             }
 
-            if (!ModelState.IsValid || !await AreAnimalsAllowed(animals, reservation.Date))
+            else if (viewModel.SelectedAnimals == null || !await AreAnimalsAllowed(animals, reservation.Date))
             {
                 ReservationModel rm = new()
                 {
@@ -101,10 +101,16 @@ namespace BeestjeOpEenFeestje.Controllers
 
             if (_signInManager.IsSignedIn(User))
             {
-                RedirectToAction("SaveCustomerInfo", r);
+                return RedirectToAction("AutoPost", r);
             }
 
             return View(r);
+        }
+
+        [HttpGet]
+        public IActionResult AutoPost(Reservation reservation)
+        {
+            return View(reservation);
         }
 
         [HttpPost]
@@ -114,7 +120,14 @@ namespace BeestjeOpEenFeestje.Controllers
 
             if (_signInManager.IsSignedIn(User))
             {
-                r.AppUser = await _signInManager.UserManager.GetUserAsync(User);
+                AppUser user = await _signInManager.UserManager.GetUserAsync(User);
+                if (user != null)
+                {
+                    r.AppUser = user;
+                    r.Name = user.UserName;
+                    r.Email = user.Email;
+                    r.Address = user.Address;
+                }
             }
             else
             {
@@ -233,14 +246,17 @@ namespace BeestjeOpEenFeestje.Controllers
         private List<Animal> GetAvailableAnimals(DateOnly date)
         {
             List<Animal> availableAnimals = new List<Animal>();
-            List<Reservation> reservationsOnDate = _context.Reservations.Where(r => r.Date.Equals(date)).ToList();
+            List<Reservation> reservationsOnDate = _context.Reservations
+                .Where(r => r.Date.Equals(date))
+                .Include(r => r.Animals)
+                .ToList();
 
             foreach (Animal animal in _context.Animals.ToList())
             {
                 bool isAvailable = true;
                 foreach (Reservation reservation in reservationsOnDate)
                 {
-                    if (reservation.Animals.Contains(animal))
+                    if (reservation.Animals.Where(a => a.Id == animal.Id).Any())
                     {
                         isAvailable = false;
                         break;
