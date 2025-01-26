@@ -48,6 +48,7 @@
                                         @availabilityError.ErrorMessage
                                     }
                                 </p>
+                                ViewData.ModelState.Clear();
                             }
                         }
                         <div class="row">
@@ -71,7 +72,7 @@
                                 </div>
                             }
                         </div>
-                        @if (ViewData.ModelState["date"]?.Errors.Count == 0)
+                        @if (ViewData.ModelState.IsValid)
                         {
                             <button type="submit" class="btn btn-outline-dark">Bevestig selectie</button>
                         }

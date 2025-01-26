@@ -138,9 +138,20 @@ namespace BeestjeOpEenFeestje.Controllers
         }
 
         [HttpGet]
-        public IActionResult Step3(Reservation reservation)
+        public async Task<IActionResult> Step3(Reservation reservation)
         {
             Reservation r = GetReservation(reservation.Id);
+
+            double priceWithoutDiscount = r.Animals.Select(a => a.Price).Sum();
+            double price = ApplyDiscount(priceWithoutDiscount, await CalculateDiscount(r.Animals, r.Date));
+
+            ReservationPriceModel viewModel = new ReservationPriceModel
+            {
+                Reservation = r,
+                PriceTotal = price,
+                
+            };
+
             return View(r);
         }
 
@@ -164,6 +175,7 @@ namespace BeestjeOpEenFeestje.Controllers
                         Animals = animals,
                     };
 
+                    ModelState.Clear();
                     ModelState.AddModelError("available", "Eerder geselecteerde dier(en) zijn niet meer beschikbaar.");
                     return View("Step1", viewModel);
                 }
@@ -175,25 +187,34 @@ namespace BeestjeOpEenFeestje.Controllers
             return View();
         }
 
-        private async Task<List<int>> CalculateDiscount(List<Animal> animals, DateOnly date)
+        private double ApplyDiscount(double price, List<int> discounts)
         {
-            List<int> discounts = new List<int>();
+            foreach (int discount in discounts)
+            {
+                price *= (discount / 100);
+            }
+            return price;
+        }
+
+        private async Task<List<Discount>> CalculateDiscount(List<Animal> animals, DateOnly date)
+        {
+            List<Discount> discounts = new List<Discount>();
             AppUser? user = await _signInManager.UserManager.GetUserAsync(User);
             
             if (date.DayOfWeek.Equals(DayOfWeek.Monday) || date.DayOfWeek.Equals(DayOfWeek.Tuesday))
             {
-                discounts.Add(MonTueDiscount);
+                discounts.Add(new Discount(DiscountNames.MonOrTue, MonTueDiscount));
             }
             if (user != null && !user.CustomerCard.Equals(CustomerCardType.Geen))
             {
-                discounts.Add(CardDiscount);
+                discounts.Add(new Discount(DiscountNames.CustomerCard, CardDiscount));
             }
 
 
-            while (discounts.Sum() > 60)
-            {
-                discounts.Remove(discounts.Min());
-            }
+            //while (discounts.Sum() > 60)
+            //{
+            //    discounts.Remove(discounts.Min());
+            //}
 
             return discounts;
         }
