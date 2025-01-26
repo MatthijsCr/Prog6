@@ -187,9 +187,9 @@ namespace BeestjeOpEenFeestje.Controllers
             return View();
         }
 
-        private double ApplyDiscount(double price, List<int> discounts)
+        private double ApplyDiscount(double price, List<Discount> discounts)
         {
-            foreach (int discount in discounts)
+            foreach (int discount in discounts.Select(d => d.Amount).ToList())
             {
                 price *= (discount / 100);
             }
@@ -209,12 +209,28 @@ namespace BeestjeOpEenFeestje.Controllers
             {
                 discounts.Add(new Discount(DiscountNames.CustomerCard, CardDiscount));
             }
+            if (animals.GroupBy(a => a.Type).Any(group => group.Count() >= 3))
+            {
+                discounts.Add(new Discount(DiscountNames.ThreeTypes, ThreeSameType));
+            }
+            if (animals.Where(a => a.Name.ToLower().Equals("eend")).Any())
+            {
+                Random random = new Random();
+                int result = random.Next(1, 7);
+                if (result == 6)
+                {
+                    discounts.Add(new Discount(DiscountNames.Duck, LuckyDuck));
+                }
+            }
+            foreach (Animal animal in animals)
+            {
 
+            }
 
-            //while (discounts.Sum() > 60)
-            //{
-            //    discounts.Remove(discounts.Min());
-            //}
+            while (discounts.Select(d => d.Amount).Sum() > 60)
+            {
+                discounts.Remove(discounts.Where(d => d.Amount == discounts.Select(d => d.Amount).Min()).FirstOrDefault());
+            }
 
             return discounts;
         }
