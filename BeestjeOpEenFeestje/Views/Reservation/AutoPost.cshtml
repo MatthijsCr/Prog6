@@ -1,0 +1,9 @@
+﻿@model BeestjeOpEenFeestje.Models.Reservation
+
+<form id="autoPostForm" asp-action="SaveCustomerInfo" method="post">
+    @Html.HiddenFor(Model => Model.Id)
+</form>
+
+<script type="text/javascript">
+    document.getElementById('autoPostForm').submit();
+</script>

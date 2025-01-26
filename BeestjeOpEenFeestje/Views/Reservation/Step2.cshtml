@@ -1,0 +1,52 @@
+﻿@model BeestjeOpEenFeestje.Models.Reservation;
+
+<form asp-controller="Reservation" asp-action="SaveCustomerInfo" method="post">
+    @Html.HiddenFor(Model => Model.Id)
+
+    <div class="container my-4">
+        <div class="row justify-content-between align-items-center position-relative">
+            <div class="col-3 text-center">
+                <div class="bg-success text-white mx-auto">1</div>
+                <small class="d-block mt-2">Beestjes kiezen</small>
+            </div>
+            <div class="col-3 text-center">
+                <div class="bg-primary text-white mx-auto">2</div>
+                <small class="d-block mt-2">Gegevens invullen</small>
+            </div>
+            <div class="col-3 text-center">
+                <div class="bg-secondary text-white mx-auto">3</div>
+                <small class="d-block mt-2">Bevestigen</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-8">
+                <div class="card">
+                    <h4 class="card-header">
+                        Stap 2 - Voer uw gegevens in
+                    </h4>
+                    <div class="card-body row">
+                        <div class="col-2">
+                            <span asp-validation-for=Name class="text-danger"></span>
+                            <label>Volledige naam:</label>
+                            <input asp-for=Name class="form-control" required/>
+                            <span asp-validation-for=Email class="text-danger"></span>
+                            <label>E-mail:</label>
+                            <input type="email" asp-for=Email class="form-control" required/>
+                            <span asp-validation-for=Address class="text-danger"></span>
+                            <label>Adres:</label>
+                            <input asp-for=Address class="form-control" required/>
+                            <br />
+                            <button type="submit" class="btn btn-outline-dark mt-3">Bevestig</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                @await Html.PartialAsync("_ReservationOverview", Model)
+            </div>
+        </div>
+    </div>
+</form>

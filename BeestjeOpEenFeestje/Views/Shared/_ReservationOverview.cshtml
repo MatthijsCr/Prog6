@@ -1,0 +1,21 @@
+﻿@model BeestjeOpEenFeestje.Models.Reservation
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h4>Uw reservatie</h4>
+        </div>
+        <div class="card-body">
+            <h5>Datum:</h5>
+            <p>@Model.Date.ToString("dd-MM-yyyy")</p>
+            <br />
+            <h5>Beestjes:</h5>
+            <ul>
+                @foreach (Animal animal in Model.Animals)
+                {
+                    <li>@animal.Name - € @animal.Price.ToString("F2")</li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>

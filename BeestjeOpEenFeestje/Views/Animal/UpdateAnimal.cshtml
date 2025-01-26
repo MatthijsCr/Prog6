@@ -1,0 +1,53 @@
+﻿@model BeestjeOpEenFeestje.ViewModels.UpdateAnimalModel
+
+<div class="d-flex align-items-center">
+    <h1 class="me-5">Beestje bewerken</h1>
+    <a href="@Url.Action("DeleteAnimal", "Animal", new { Id = Model.Id })" class="btn btn-danger">Verwijder beestje</a>
+</div>
+
+<form asp-action="UpdateAnimal" method="post">
+
+    <input hidden asp-for="Id" value="@Model.Id" />
+    <div>
+        <label asp-for="Name">Naam</label>
+        <input asp-for="Name" value ="@Model.Name"class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label asp-for="Type">Type</label>
+        <input asp-for="Type" value="@Model.Type" class="form-control" />
+        <span asp-validation-for="Type" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label asp-for="Price">Prijs</label>
+        <input type="number" min="0" max="1000" step="0.01" value="@Model.Price" asp-for="Price" class="form-control" />
+        <input type="hidden" asp-for="Price"/>
+    </div>
+
+    <input type="hidden" asp-for="ImageURL" id="ImageURL" value="@Model.ImageURL"/>
+    <div class="dropdown">
+        <button type="button" class="dropbtn">
+            @if (!string.IsNullOrEmpty(Model.ImageURL))
+            {
+                <span>Gekozen plaatje: <img src="@Model.ImageURL" alt="Selected Image" style="width: 50px; height: auto;"></span>
+            }
+            else
+            {
+                <span>Kies een Dierenplaatje</span>
+            }
+        </button>
+        <div class="dropdown-content">
+            @foreach (string path in ViewBag.ImageUrls)
+            {
+                <a href="#" onclick="selectImage('@path')">
+                    <img src="@path" alt="Dierenplaatje" class="dropdown-image">
+                </a>
+            }
+        </div>
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary">Opslaan</button>
+    </div>
+</form>
