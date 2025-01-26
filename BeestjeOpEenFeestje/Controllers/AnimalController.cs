@@ -157,12 +157,11 @@ namespace BeestjeOpEenFeestje.Controllers
 
         private List<string> GetImageUrls()
         {
-            // Use relative path to the Images folder inside wwwroot
             string imagesFolderPath = Path.Combine("wwwroot", "Images");
 
             if (!Directory.Exists(imagesFolderPath))
             {
-                return new List<string>(); // Return an empty list if the folder doesn't exist
+                return new List<string>(); 
             }
 
             string[] imageFiles = Directory.GetFiles(imagesFolderPath, "*.png");
@@ -170,12 +169,10 @@ namespace BeestjeOpEenFeestje.Controllers
             List<string> imageUrls = new List<string>();
             foreach (var imageFile in imageFiles)
             {
-                // Use the file name to construct a relative URL (without the 'wwwroot' part)
-                string relativePath = "/Images/" + Path.GetFileName(imageFile); // relative to the root of the app
+                string relativePath = "/Images/" + Path.GetFileName(imageFile); 
                 imageUrls.Add(relativePath);
             }
 
-            // Optionally, you can store the URLs in the ViewBag to be accessible in the view
             ViewBag.ImageUrls = imageUrls;
 
             return imageUrls;

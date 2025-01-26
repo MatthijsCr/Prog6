@@ -16,6 +16,9 @@ namespace BeestjeOpEenFeestje.Controllers
         private const int CardDiscount = 10;
         private const int LetterCombo = 2;
 
+        private const int MaxNoCard = 3;
+        private const int MaxZilverCard = 4;
+
         private readonly AnimalDbContext _context = context;
         private readonly SignInManager<AppUser> _signInManager = signInManager;
 
@@ -303,20 +306,20 @@ namespace BeestjeOpEenFeestje.Controllers
 
             if (user != null)
             {
-                if (user.CustomerCard.Equals(CustomerCardType.Geen) && animals.Count > 3)
+                if (user.CustomerCard.Equals(CustomerCardType.Geen) && animals.Count > MaxNoCard)
                 {
                     if (!date.DayOfWeek.Equals(DayOfWeek.Wednesday)) 
                     {
                         ModelState.AddModelError("", "Max. 3 beestjes zonder klantenkaart.");
                         return false;
                     }
-                    else if (animals.Count > 4) // Self added rule for signed in users without customer card
+                    else if (animals.Count > MaxNoCard + 1) // Self added rule for signed in users without customer card
                     {
                         ModelState.AddModelError("", "Max. 4 beestjes op woensdag zonder klantenkaart.");
                         return false;
                     }
                 }
-                else if (user.CustomerCard.Equals(CustomerCardType.Zilver) && animals.Count > 4)
+                else if (user.CustomerCard.Equals(CustomerCardType.Zilver) && animals.Count > MaxZilverCard)
                 {
                     ModelState.AddModelError("", "Max. 4 beestjes met zilveren klantenkaart.");
                     return false;
