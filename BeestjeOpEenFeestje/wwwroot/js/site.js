@@ -1,4 +1,6 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿function selectImage(imagePath) {
+                document.getElementById('ImageURL').value = imagePath;
 
-// Write your JavaScript code.
+                var button = document.querySelector('.dropbtn');
+                button.innerHTML = 'Gekozen plaatje: <img src="' + imagePath + '" alt="Selected Image" style="width: 50px; height: auto;">';
+}

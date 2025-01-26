@@ -1,0 +1,36 @@
+﻿@model IEnumerable<BeestjeOpEenFeestje.ViewModels.ReservationInfoModel>
+
+@{
+    ViewData["Title"] = "Boekingen";
+}
+
+<h1 class="me-5">Boekingen</h1>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>DierenNaam</th>
+            <th>Datum</th>
+            <th>Persoon</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var reservation in Model)
+            {
+                <tr>
+                    <td>@reservation.AnimalName</td>
+                    <td>@reservation.Date.ToString("dd-MM-yyyy")</td>
+                    <td>@reservation.Username</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center">Geen boekingen gevonden</td>
+            </tr>
+        }
+    </tbody>
+</table>
