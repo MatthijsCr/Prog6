@@ -25,7 +25,7 @@ namespace BeestjeOpEenFeestje.Controllers
         [Authorize(Roles = "Admin,Employee")]
         public IActionResult CreateAnimal()
         {
-            ViewBag.ImageUrls = GetImageUrls();
+            ViewBag.ImgUrls = GetImageUrls();
             return View();
         }
 
@@ -33,7 +33,7 @@ namespace BeestjeOpEenFeestje.Controllers
         [Authorize(Roles = "Admin,Employee")]
         public IActionResult CreateAnimal(CreateAnimalModel model)
         {
-            if(MakeAnimal(model))
+            if (MakeAnimal(model))
             {
                 return RedirectToAction("AnimalList");
             }
@@ -176,5 +176,7 @@ namespace BeestjeOpEenFeestje.Controllers
 
             return imageUrls;
         }
+
+
     }
 }
