@@ -276,12 +276,11 @@ namespace BeestjeOpEenFeestje.Controllers
 
             if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
             {
-                if (animals.Where(a => a.Name.ToLower().Equals("pinguïn")).Any())
+                if (animals.Where(a => a.Name.ToLower().Equals("pinguïn")).Any() || animals.Where(a => a.Name.ToLower().Equals("pinguin")).Any())
                 {
                     ModelState.AddModelError("", "Dieren in pak werken alleen doordeweeks");
                     return false;
-                if (animals.Where(a => a.Name.ToLower().Equals("pinguin")).Any())
-                    return false;
+                }
             }
 
             if (date.Month >= 10 || date.Month <= 2)
