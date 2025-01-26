@@ -28,7 +28,8 @@ namespace BeestjeOpEenFeestje.Controllers
         [HttpPost]
         public IActionResult SaveDate(DateOnly date)
         {
-            EntityEntry<Reservation> entry = _context.Add(new Reservation() { Date = date });
+            // Get Reservation with auto-increment Id
+            EntityEntry<Reservation> entry = _context.Add(new Reservation() { Date = date }); 
             _context.SaveChanges();
 
             return RedirectToAction("Step1", entry.Entity);
@@ -47,14 +48,9 @@ namespace BeestjeOpEenFeestje.Controllers
 
             ReservationModel viewModel = new ReservationModel
             {
-                Reservation = reservation, // Reservation with Id set in db
+                Reservation = reservation,
                 Animals = availableAnimals,
             };
-
-            if (TempData["SelectedAnimalsError"] != null)
-            {
-                ModelState.AddModelError("animal", "Selecteer minstens één beestje.");
-            }
 
             return View(viewModel);
         }
@@ -75,13 +71,20 @@ namespace BeestjeOpEenFeestje.Controllers
                 }
             }
 
-            else if (viewModel.SelectedAnimals == null || !await AreAnimalsAllowed(animals, reservation.Date))
+            ReservationModel rm = new ReservationModel
             {
-                ReservationModel rm = new ReservationModel
-                {
-                    Reservation = reservation,
-                    Animals = GetAvailableAnimals(reservation.Date),
-                };
+                Reservation = reservation,
+                Animals = GetAvailableAnimals(reservation.Date),
+            };
+
+            if (viewModel.SelectedAnimals.Count() == 0)
+            {
+                ModelState.Clear();
+                ModelState.AddModelError("SelectedAnimals", "Selecteer minstens één beestje.");
+                return View("Step1", rm);
+            }
+            else if (!await AreAnimalsAllowed(animals, reservation.Date))
+            {
                 return View("Step1", rm);
             }
 
@@ -142,17 +145,18 @@ namespace BeestjeOpEenFeestje.Controllers
         {
             Reservation r = GetReservation(reservation.Id);
 
+            List<Discount> discounts = await CalculateDiscount(r.Animals, r.Date);
             double priceWithoutDiscount = r.Animals.Select(a => a.Price).Sum();
-            double price = ApplyDiscount(priceWithoutDiscount, await CalculateDiscount(r.Animals, r.Date));
+            double price = ApplyDiscount(priceWithoutDiscount, discounts);
 
             ReservationPriceModel viewModel = new ReservationPriceModel
             {
                 Reservation = r,
                 PriceTotal = price,
-                
+                Discounts = discounts,
             };
 
-            return View(r);
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -191,7 +195,7 @@ namespace BeestjeOpEenFeestje.Controllers
         {
             foreach (int discount in discounts.Select(d => d.Amount).ToList())
             {
-                price *= (discount / 100);
+                price *= ((100 - discount) / 100.0);
             }
             return price;
         }
@@ -224,10 +228,26 @@ namespace BeestjeOpEenFeestje.Controllers
             }
             foreach (Animal animal in animals)
             {
-
+                int comboAmount = 0;
+                char letter = 'a';
+                while (letter >= 'a' && letter <= 'z')
+                {
+                    if (animal.Name.ToLower().Contains(letter))
+                    {
+                        comboAmount++;
+                        letter++;
+                        continue;
+                    }
+                    break;
+                }
+                if (comboAmount > 0)
+                {
+                    discounts.Add(new Discount(DiscountNames.ABC, (LetterCombo * comboAmount)));
+                    break;
+                }  
             }
 
-            while (discounts.Select(d => d.Amount).Sum() > 60)
+            while (discounts.Select(d => d.Amount).Sum() > MaxDiscount)
             {
                 discounts.Remove(discounts.Where(d => d.Amount == discounts.Select(d => d.Amount).Min()).FirstOrDefault());
             }
@@ -237,51 +257,84 @@ namespace BeestjeOpEenFeestje.Controllers
 
         private async Task<bool> AreAnimalsAllowed(List<Animal> animals, DateOnly date)
         {
+            ModelState.Clear();
             AppUser? user = await _signInManager.UserManager.GetUserAsync(User);
 
             if (animals.Where(a => a.Type.ToLower().Equals("boerderij")).Any())
             {
                 if (animals.Where(a => a.Name.ToLower().Equals("leeuw")).Any())
+                {
+                    ModelState.AddModelError("", "Mag geen beestje van type boerderij combineren met een leeuw.");
                     return false;
+                }
                 else if (animals.Where(a => a.Name.ToLower().Equals("ijsbeer")).Any())
+                {
+                    ModelState.AddModelError("", "Mag geen beestje van type boerderij combineren met een ijsbeer.");
                     return false;
+                }
             }
 
             if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
             {
                 if (animals.Where(a => a.Name.ToLower().Equals("pinguïn")).Any())
+                {
+                    ModelState.AddModelError("", "Penguïns mogen alleen doordeweeks gereserveerd worden.");
                     return false;
+                }
             }
 
             if (date.Month >= 10 || date.Month <= 2)
             {
                 if (animals.Where(a => a.Type.ToLower().Equals("woestijn")).Any())
+                {
+                    ModelState.AddModelError("", "Beestjes van type woestijn mogen alleen tussen maart en september.");
                     return false;
+                }
             }
 
             if (date.Month >= 6 && date.Month <= 8)
             {
                 if (animals.Where(a => a.Type.ToLower().Equals("sneeuw")).Any())
+                {
+                    ModelState.AddModelError("", "Beestjes van type sneeuw mogen alleen tussen september en mei.");
                     return false;
+                }
             }
 
             if (user != null)
             {
                 if (user.CustomerCard.Equals(CustomerCardType.Geen) && animals.Count > 3)
                 {
-                    if (!date.DayOfWeek.Equals(DayOfWeek.Wednesday) && animals.Count <= 4) // Self added rule for signed in users without customer card
+                    if (!date.DayOfWeek.Equals(DayOfWeek.Wednesday)) 
+                    {
+                        ModelState.AddModelError("", "Max. 3 beestjes zonder klantenkaart.");
                         return false;
+                    }
+                    else if (animals.Count > 4) // Self added rule for signed in users without customer card
+                    {
+                        ModelState.AddModelError("", "Max. 4 beestjes op woensdag zonder klantenkaart.");
+                        return false;
+                    }
                 }
                 else if (user.CustomerCard.Equals(CustomerCardType.Zilver) && animals.Count > 4)
+                {
+                    ModelState.AddModelError("", "Max. 4 beestjes met zilveren klantenkaart.");
                     return false;
-                
+                }
                 if (!user.CustomerCard.Equals(CustomerCardType.Platinum) && animals.Where(a => a.Type.ToLower().Equals("vip")).Any())
                 {
+                    ModelState.AddModelError("", "VIP beestjes alleen met platinum klantenkaart.");
                     return false;
                 }
             }
-            else if (animals.Count > 3 || animals.Where(a => a.Type.ToLower().Equals("vip")).Any())
+            else if (animals.Count > 3)
             {
+                ModelState.AddModelError("", "Max. 3 beestjes zonder klantenkaart.");
+                return false;
+            }
+            else if (animals.Where(a => a.Type.ToLower().Equals("vip")).Any())
+            {
+                ModelState.AddModelError("", "VIP beestjes alleen met platinum klantenkaart.");
                 return false;
             }
 
